@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="这是来自白日梦与诗的个人朋友圈，通过本页你可以浏览我的一些日常苏苏碎碎念.">
+    <meta name="keywords" content="cflow,个人主页,朋友圈,苏苏碎碎念">
+    <link rel="icon" href="./assets/img/avatar.png" type="image/png" />
+    <link href="./assets/css/style.css" rel="stylesheet" type="text/css">
+    <link href="./assets/css/APlayer.min.css" rel="stylesheet" type="text/css">
+    <link href="./assets/css/highlight.github.min.css" rel="stylesheet" type="text/css">
+    <link href="./assets/css/custom.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="./assets/css/waline.css" />
+    <link rel="stylesheet" href="./assets/css/friendlink.css">
+    <title>白日梦与诗的碎碎念</title>
+    <style type='text/css'>
+        body {
+            margin: 0 auto;
+            padding: 0;
+            max-width: 850px; /* 稍微增加最大宽度 */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        .container {
+            padding: 0 20px 0 20px; /* 恢复左侧内边距，减少右侧内边距 */
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+        
+        header {
+            position: relative;
+            height: 200px; /* Adjust height as needed */
+            width: 100%; /* Ensure header takes full width */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 20px;
+            backdrop-filter: blur(16px); /* Add blur effect */
+            transition: background-image 0.5s ease; /* Smooth transition */
+            display: flex;
+            justify-content: flex-start; /* Align items to the left */
+            align-items: center; /* Center content vertically */
+            border-radius: 15px; /* 圆角边框 */
+            box-sizing: border-box;
+            margin: 0 auto;
+        }
+
+        .menu {
+            text-align: left; /* Align text to the left */
+            margin-right: auto; /* Push the profile to the right */
+        }
+        .main-title {
+        font-size: 24px; 
+        }
+        .profile {
+            position: absolute;
+            bottom: -30px;
+            right: 2px;
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* 将头像推到右侧 */
+        }
+        .profile-info {
+        margin-right: 8px; /* 文本和头像之间的间距 */
+        }
+        .profile img {
+            width: 60px; /* Adjust size as needed */
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 2px;
+        }
+
+        .profile .title {
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #ff6b6b, #4aa3f7, #6bcb77); /* 渐变颜色 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; /* 使文本填充为透明，以显示渐变 */
+        }
+
+        .profile .description {
+            font-size: 13px;
+            opacity: 1.2;
+            color: #000000; /* 黑色字体 */
+        }
+
+        #retopbtn, #rebtmbtn, .theme-toggle {
+            position: fixed;
+            z-index: 98;
+        }
+
+        #rebtmbtn {
+            top: 10px;
+            right: 10px;
+        }
+        
+        #retopbtn {
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .theme-toggle {
+        position: absolute; /* 改为绝对定位 */
+        top: 20px; /* 调整位置 */
+        right: 20px; /* 调整位置 */
+        cursor: pointer;
+        font-size: 20px; /* 增加字体大小以便更易于点击 */
+        z-index: 2; /* 确保在其他元素之上 */
+        }
+
+        .comment-button {
+            color: #718096;
+            font-size: 0.75rem;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+            display: inline;
+        }
+
+        .comment-button:hover {
+            text-decoration: underline;
+        }
+
+        .comment-box {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--color-text-bg);
+            border-radius: 8px;
+        }
+
+        .button-container {
+            margin: 10px 0;
+            display: flex;
+            justify-content: flex-start; /* Align buttons to the left */
+        }
+
+        .nav-button {
+            background-color: #3c5b71e0;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #7b84fe;
+            color: #fff;
+        }
+
+        .nav-button svg {
+            height: 16px;
+            width: 16px;
+            margin-right: 5px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* memos.top 样式 */
+        body.light-theme,
+        :root {
+            /* light theme color */
+            --color-main: #222;
+            --color-background: #fff;
+            --color-text-bg: #eaeaea;
+            --color-text-hover: #eeeef1;
+            --color-memos-id: #536471;
+            --color-img-border: #cfd9de;
+            --color-tag: #2563eb;
+            --color-tag-hover: #54a3ff;
+            --color-fg-muted: #576061;
+            --color-border-default: #d0d7de;
+            --color-border-muted: #d8dee4;
+            --color-post-preview: #fff;
+            --color-memos-pre-bg: #f3f4f6;
+            --color-link: #2563eb;
+        }
+
+        body.dark-theme {
+            /* dark theme colors */
+            --color-main: #adbac7;
+            --color-background: #1c2128;
+            --color-text-bg: #22272e;
+            --color-text-hover: #272c32;
+            --color-memos-id: #71767b;
+            --color-img-border: #292a2d;
+            --color-tag: #539bf5;
+            --color-link: #539bf5;
+            --color-border-muted: #2d333b;
+            --color-post-preview: #4a4b50;
+            --color-memos-pre-bg: #2d333b;
+        }
+
+        .memos {
+            min-height: 300px;
+            text-align: left;
+            width: 100%;
+            line-height: 2;
+            margin: 0.5rem 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            padding-right: 30px; /* 增加右侧内边距，确保内容不会超出容器 */
+        }
+
+        .memos a {
+            color: var(--color-link);
+            text-decoration: none;
+        }
+
+        .memos a:hover {
+            text-decoration: underline;
+        }
+
+        .memos ul {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+        }
+
+        /* 添加视频容器样式 */
+        .video-wrapper {
+            height: 0;
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        
+        .video-wrapper iframe, .video-wrapper video {
+            border: 0;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+        
+        .embedded-html {
+            margin: 10px 0;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        /* 适配移动设备的视频容器 */
+        @media (max-width: 600px) {
+            .video-wrapper {
+                margin: 8px 0;
+            }
+        }
+
+        /* 添加音频容器样式 */
+        .audio-wrapper {
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .audio-wrapper audio {
+            width: 100%;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        /* 暗色模式下的音频播放器 */
+        body.dark-theme .audio-wrapper audio {
+            background-color: #2d333b;
+        }
+        
+        /* 确保视频和音频资源在移动设备上正确显示 */
+        .videos-wrapper, .audios-wrapper {
+            width: 100%;
+            margin: 8px 0;
+        }
+        
+        /* 资源图片样式 */
+        .resource-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        
+        /* 文件链接样式 */
+        .resource-link {
+            display: block;
+            padding: 8px 12px;
+            margin: 5px 0;
+            background-color: var(--color-text-bg);
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--color-link);
+            word-break: break-all;
+        }
+        
+        .resource-link:hover {
+            background-color: var(--color-text-hover);
+        }
+
+        @media (min-width: 601px) {
+            .memos__content {
+                width: calc(100% - 70px); /* 在桌面视图中减少更多宽度 */
+                box-sizing: border-box;
+            }
+            
+            .memos {
+                padding-right: 40px; /* 在桌面视图中增加更多右侧内边距 */
+            }
+        }
+
+        .memos__text {
+            position: relative;
+            background: var(--color-text-bg);
+            padding: 1rem 0.75rem 1rem 1rem; /* 使用简写形式定义内边距 */
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.75rem;
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            margin-bottom: 1.5rem;
+            list-style: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .timeline:hover .memos__text:before {
+            background: var(--color-text-hover);
+            z-index: 1;
+        }
+
+        .timeline:hover .memos__text {
+            background: var(--color-text-hover);
+        }
+
+        .memos__text p {
+            margin: 0;
+        }
+
+        .memos__text ul li {
+            list-style: none;
+        }
+
+        .memos__text i {
+            margin: 0 0.25rem;
+        }
+
+        .memos__text:before {
+            content: "";
+            position: absolute;
+            top: 23px;
+            left: -7px;
+            width: 14px;
+            height: 14px;
+            transform: rotate(45deg);
+            border-radius: 3px;
+            background: var(--color-text-bg);
+            z-index: 1;
+        }
+
+        .memos__meta {
+            margin-top: 0.5rem;
+        }
+
+        .memos__meta small {
+            color: #718096;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .memos__userinfo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .memos__id {
+            color: var(--color-memos-id);
+            margin-left: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .memo-number {
+            color: var(--color-memos-id) !important; /* 添加!important确保优先级 */
+            font-size: 0.875rem;
+            opacity: 1; /* 将opacity从0.9改为1以匹配memos__id */
+            display: inline-block;
+        }
+        
+        .memo-number:hover {
+            text-decoration: underline !important;
+            cursor: pointer;
+        }
+        
+        .back-to-all {
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            background-color: #3c5b71e0;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .back-to-all:hover {
+            background-color: #7b84fe;
+        }
+        
+        .back-to-all svg {
+            margin-right: 5px;
+        }
+
+        .tag-span {
+            font-size: 0.875rem;
+            display: inline-block;
+            margin: 0.125rem;
+        }
+
+        .tag-span:hover {
+            text-decoration: underline;
+        }
+
+        .load-btn, .button-load {
+            background: var(--color-text-bg);
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            color: var(--color-main);
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .load-btn:hover, .button-load:hover {
+            background: var(--color-text-hover);
+        }
+
+        .load-btn:disabled, .button-load:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Mobile specific styles */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                max-width: 100%;
+            }
+            
+            .container {
+                padding: 0 10px;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+                padding-right: 5px; /* 减小右侧内边距 */
+            }
+            
+            .memos {
+                width: 100%;
+                padding-right: 5px; /* 减小右侧内边距 */
+            }
+            
+            .memos__text {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            header {
+                height: 150px; /* Adjust height for mobile */
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .theme-toggle {
+                top: 10px; /* 在移动设备上调整位置 */
+                right: 10px; /* 在移动设备上调整位置 */
+            }
+
+            .menu .title {
+                font-size: 20px; /* Adjust title size for mobile */
+            }
+
+            .main-title {
+                font-size: 18px; /* 在手机尺寸下调整字体大小 */
+            }
+            .profile {
+                bottom: -30px; /* Adjust position for mobile */
+            }
+            
+            .memos__content {
+                margin-left: 0; /* 移除左侧边距 */
+            }
+            
+            .memos__text:before {
+                display: none; /* 移除箭头 */
+            }
+            
+            .memos__userinfo {
+                flex-direction: row; /* 水平排列用户信息 */
+                align-items: center;
+                margin-bottom: 0.75rem;
+            }
+            
+            /* 添加分隔线样式 */
+            .memos__text hr {
+                border: 0.2px solid rgba(255, 255, 255, 0.14);
+                margin-top: 10px;
+                margin-bottom: 15px;
+            }
+            
+            /* 调整底部元数据样式 */
+            .memos__meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header" onclick="window.open('https://www.brmys.top/', '_blank')" style="cursor: pointer;">
+        <div class="menu">
+            <div class="title">苏苏碎碎念...</div>
+            <div class="pages">
+                <a href="https://www.brmys.top/" target="_blank" rel="noopener noreferrer"
+                   style="font-size: 14px; background: linear-gradient(90deg, #5fbcff, #7b84fe); 
+                          -webkit-background-clip: text; 
+                          -webkit-text-fill-color: transparent;">前往博客</a>
+            </div>
+        </div>
+
+        <div class="profile">
+            <div class="profile-info">
+                <div class="title">白日梦与诗</div>
+                <div class="description">公众号·白日梦与诗</div>
+            </div>
+            <img src="./assets/img/avatar.png" onclick="randomBackground()" alt="头像">
+        </div>
+
+        <div class='theme-toggle' onclick="event.stopPropagation()">🌓</div>
+    </header>
+
+    <section id="main" class="container">
+        <div class="main-title">我思故我在</div>
+
+        <blockquote>
+            <p>cflow</a> <del>苏苏碎碎念</del>,净几明窗，一轴画，一囊琴，一只鹤，一瓯茶，一炉香，一部法帖；小园幽径，几丛花，几群鸟，几区亭，几拳石，几池水，几片闲云。</p>
+        </blockquote>
+
+        <div class="total">已记录 <span id="total">0</span>条 🎉</div>
+
+        <blockquote id="tag-filter" class="filter">
+            <div id="tags"></div>
+        </blockquote>
+        
+        <div class="button-container">
+            <button class="nav-button" onclick="showPage('memos')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill='#ffffff' width='64' height='64' viewBox="0 0 56 56">
+                    <path
+                        d="M 16.0938 52.3164 C 17.0313 52.3164 17.6876 51.8476 18.7891 50.8164 L 27.2735 43.0820 L 43.0938 43.1055 C 50.0783 43.1289 53.8280 39.2383 53.8280 32.3711 L 53.8280 14.4180 C 53.8280 7.5508 50.0783 3.6836 43.0938 3.6836 L 12.9064 3.6836 C 5.9454 3.6836 2.1720 7.5273 2.1720 14.4180 L 2.1720 32.3711 C 2.1720 39.2617 5.9454 43.1055 12.9064 43.0820 L 14.0079 43.0820 L 14.0079 49.9024 C 14.0079 51.3555 14.7813 52.3164 16.0938 52.3164 Z M 19.9376 24.3555 C 19.9376 26.2070 18.2969 27.8242 16.4220 27.8242 C 14.5469 27.8242 12.9532 26.2070 12.9532 24.3555 C 12.9532 22.4805 14.5001 20.8398 16.4220 20.8398 C 18.2969 20.8398 19.9376 22.5039 19.9376 24.3555 Z M 31.6564 24.3555 C 31.6564 26.2070 30.0391 27.8242 28.1642 27.8242 C 26.3126 27.8242 24.6954 26.2070 24.6954 24.3555 C 24.6954 22.4805 26.2657 20.8398 28.1642 20.8398 C 30.0391 20.8398 31.6564 22.5039 31.6564 24.3555 Z M 43.3751 24.3555 C 43.3751 26.2070 41.8048 27.8242 39.9064 27.8242 C 38.0313 27.8242 36.4142 26.2070 36.4142 24.3555 C 36.4142 22.4805 38.0079 20.8398 39.9064 20.8398 C 41.8048 20.8398 43.3751 22.5039 43.3751 24.3555 Z">
+                    </path>
+                </svg>
+                说说
+            </button>
+            <button class="nav-button" onclick="showPage('friendlinks')" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width='64' height='64' fill='#ffffff' viewBox="0 0 16 16">
+                    <path
+                        d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5">
+                    </path>
+                </svg>       
+                友链
+            </button>
+            <button class="nav-button" onclick="showPage('about')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill='#ffffff' width='64' height='64' viewBox="0 0 56 56">
+                    <path
+                        d="M 25.9257 28.5390 L 25.9257 16.1172 L 22.4335 16.1172 C 18.5663 16.1172 16.5272 13.6094 16.5272 11.1719 C 16.5272 8.6406 18.4023 7.1406 20.9101 7.1406 C 23.7929 7.1406 26.0429 9.3672 26.0429 13.0937 L 26.0429 16.1172 L 29.9570 16.1172 L 29.9570 13.0937 C 29.9570 9.3672 32.2070 7.1406 35.0897 7.1406 C 37.5976 7.1406 39.4960 8.6406 39.4960 11.1719 C 39.4960 13.6094 37.3866 16.1172 33.5663 16.1172 L 30.0741 16.1172 L 30.0741 28.5390 L 46.5976 28.5390 C 49.1524 28.5390 50.5352 27.5547 50.5352 25.0468 L 50.5352 19.6094 C 50.5352 17.1250 49.1524 16.1172 46.5976 16.1172 L 41.1366 16.1172 C 42.5897 14.8047 43.4570 13.0234 43.4570 11.0078 C 43.4570 6.4844 39.8710 3.2266 35.3241 3.2266 C 31.9492 3.2266 29.2070 5.1015 28.0116 8.4297 C 26.8163 5.1015 24.0507 3.2266 20.6757 3.2266 C 16.1523 3.2266 12.5429 6.4844 12.5429 11.0078 C 12.5429 13.0234 13.3866 14.8047 14.8632 16.1172 L 9.4023 16.1172 C 6.9882 16.1172 5.4648 17.1250 5.4648 19.6094 L 5.4648 25.0468 C 5.4648 27.5547 6.8710 28.5390 9.4023 28.5390 Z M 25.9257 52.7734 L 25.9257 31.0468 L 8.8163 31.0468 L 8.8163 46.8203 C 8.8163 50.7344 11.1132 52.7734 15.0272 52.7734 Z M 30.0741 31.0468 L 30.0741 52.7734 L 40.9726 52.7734 C 44.8866 52.7734 47.1835 50.7344 47.1835 46.8203 L 47.1835 31.0468 Z">
+                    </path>
+                </svg>       
+                关于
+            </button>
+            <button class="nav-button" onclick="window.open('https://www.brmys.top/', '_blank')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill='#ffffff' width='64' height='64' viewBox="0 0 56 56">
+                    <path d="M28 4C15.3 4 5 14.3 5 27c0 12.7 10.3 23 23 23s23-10.3 23-23C51 14.3 40.7 4 28 4zm4.9 34.4c-.5.3-1.3.2-1.7-.1-.4-.4-.5-1.1-.1-1.7 2.1-3 3.3-6.5 3.3-10.3 0-5.3-2.3-10.3-6.4-13.8-3.3-2.9-7.6-4.5-12.1-4.5-1.5 0-3 .2-4.4.5-.7.1-1.4-.3-1.5-1-.1-.7.3-1.4 1-1.5 1.7-.3 3.5-.5 5.3-.5 5.3 0 10.3 1.9 14.3 5.3 4.8 4.1 7.5 10 7.5 16.1 0 4.5-1.4 8.7-4 12.3-.1.1-.1.2-.2.2zm5.4-5.7c-.2.4-.6.6-1 .6-.2 0-.4 0-.5-.1-1.9-1-4-1.5-6.2-1.5-3.9 0-7.6 1.5-10.3 4.3-.3.3-.7.5-1.1.5-.4 0-.8-.2-1.1-.5-.3-.3-.5-.7-.5-1.1 0-.4.2-.8.5-1.1 3.2-3.2 7.6-5.1 12.1-5.1 2.7 0 5.2.6 7.6 1.9.5.3.7 1 .5 1.6zm3.6-9.1c-.5.4-1.3.3-1.7-.2-2.2-2.7-5.7-4.4-9.4-4.4-3.8 0-7.3 1.7-9.4 4.4-.2.3-.5.4-.9.4-.3 0-.6-.1-.8-.3-.6-.5-.7-1.3-.2-1.9 2.7-3.3 6.9-5.3 11.3-5.3 4.5 0 8.6 2 11.3 5.3.4.5.3 1.4-.2 1.9zm.2-8c-.2.4-.6.7-1.1.7-.2 0-.4 0-.5-.1C35.8 13.7 30.9 12 25.8 12c-5.1 0-10 1.7-14.1 4.8-.5.3-1.2.2-1.7-.1-.5-.4-.7-1.1-.3-1.7C14.2 11.3 19.8 9.3 25.8 9.3c5.9 0 11.6 2 16 5.7.5.3.7 1 .3 1.6z">
+                    </path>
+                </svg>       
+                博客
+            </button>
+        </div>
+        
+        <div id="memos" class="memos page active"></div>
+        <div id="friendlinks" class="page"> 
+            <div class="title"><i class="fa-solid fa-user-plus"></i>友情链接</div>
+            </br>
+            <div class="friendlinks-container">
+                <div class="friendlinks-card">
+                    <div class="avatar">
+                        <a href="https://rcy1314.github.io/Idea/">
+                            <img alt="" loading="lazy" decoding="async"
+                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/43w.jpeg">
+                        </a>
+                    </div>
+                    <div class="info">
+                        <a class="friendname" target="_blank" href="https://rcy1314.github.io/Idea/">idea book</a>
+                        <p class="frienddescription">旧的专栏</p>
+                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="https://rcy1314.github.io/Idea/">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/43w.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="https://rcy1314.github.io/Idea/">idea book</a>
+                                        <p class="frienddescription">旧的专栏</p>
+                                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="https://rcy1314.github.io/Idea/">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/43w.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="https://rcy1314.github.io/Idea/">idea book</a>
+                                        <p class="frienddescription">旧的专栏</p>
+                                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="#">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/33s.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="#">待添加</a>
+                                        <p class="frienddescription">未来可期</p>
+                                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="#">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/43e.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="#">待添加</a>
+                                        <p class="frienddescription">未来可期</p>
+                                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="#">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/335r.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="#">待添加</a>
+                                        <p class="frienddescription">未来可期</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+        <div id="waline" class="page">
+            <div id="waline"></div>
+        </div>
+        <div id="about" class="page"> 
+            <div class="title"><i class="fa-solid fa-user-plus"></i>关于</div>
+            </br>  
+            <p>cflow创建的公开卡片会发表到这个网页，</p>  
+            <p>cflow由苏苏二次开发完成，在开源项目Memos和cflow基础上开发完成。</p>
+            <p><a href="https://dub.sh/sscflow" target="_blank" rel="noopener noreferrer"
+                style=" background: linear-gradient(90deg, #ba5fff, #7bc1fe); 
+                       -webkit-background-clip: text; 
+                       -webkit-text-fill-color: transparent;">cflow详情</a></p>
+            <p>公众号:白日梦与诗</p>
+            <p>微信:x1145158939</p>
+            <p>请记得世界和我始终都是爱着你的！</p>                   
+        </div>
+    </section>
+    <footer class="markdown-body footer">
+        <div class="bsz">
+           <!--  <span id="busuanzi_container_site_pv">主页总访问量: <span id="busuanzi_value_site_pv"></span> 次</span> -->
+        </div>
+        <div style="margin-top: 10px;">
+            &nbsp; 
+            <span id="momk"></span>
+            <span id="momk_red" style="color: #ff0000;"></span> 
+            <script type="text/javascript">
+                function NewDate(str) {
+                    str = str.split('-');
+                    var date = new Date();
+                    date.setUTCFullYear(str[0], str[1] - 1, str[2]);
+                    date.setUTCHours(0, 0, 0, 0);
+                    return date;
+                }
+    
+                function momxc() {
+                    var birthDay = NewDate("2025-03-01");
+                    var today = new Date();
+                    var timeold = today.getTime() - birthDay.getTime();
+                    var msPerDay = 24 * 60 * 60 * 1000;
+                    var daysold = Math.floor(timeold / msPerDay);
+                    var e_hrsold = (timeold % msPerDay) / (1000 * 60 * 60);
+                    var hrsold = Math.floor(e_hrsold);
+                    var e_minsold = (timeold % (1000 * 60 * 60)) / (1000 * 60);
+                    var minsold = Math.floor(e_minsold);
+                    var seconds = Math.floor((timeold % (1000 * 60)) / 1000);
+    
+                    document.getElementById("momk").innerHTML = "本站已运行: " + daysold + "天" + hrsold + "小时" + minsold + "分" + seconds + "秒";
+                    setTimeout(momxc, 1000);
+                }
+                momxc();
+            </script> 
+        </div>
+        <p>Copyright @
+            <script>
+                document.write(new Date().getFullYear())
+            </script>
+            <a href="https://www.brmys.top/" target="_blank" style="font-size: 14px; background: linear-gradient(90deg, #5fbcff, #7b84fe); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;">白日梦与诗</a> All Rights Reserved.
+        </p>
+    </footer>
+    <!-- 
+    <div id='rebtmbtn' onclick='returnBottom()'>👇</div>
+    <div id='retopbtn' onclick='returnTop()'>👆</div>
+    -->
+    <script type="text/javascript">
+        // 初始背景图列表，后续会自动扫描目录添加新图片
+        const backgrounds = [
+            './assets/img/bg/3.jpg',
+            './assets/img/bg/5ae.gif',
+            './assets/img/bg/wallhaven-wep316.png'
+        ];
+
+        // 扫描bg目录下的所有图片
+        function scanBackgroundImages() {
+            // 使用fetch尝试列出目录（注意：直接列出目录在一些环境下可能不支持）
+            // 此处我们通过读取已知图片检测它们是否存在来动态构建背景列表
+            const potentialImages = [
+                '3.jpg', '5ae.gif', 'wallhaven-wep316.png'
+                // 在这里添加更多可能的图片文件名
+            ];
+            
+            // 清空现有的backgrounds数组，除了默认图片
+            const defaultImage = './assets/img/bg/3.jpg';
+            backgrounds.length = 0;
+            backgrounds.push(defaultImage);
+            
+            // 检查每个可能的图片
+            potentialImages.forEach(imgName => {
+                if (imgName !== '3.jpg') { // 跳过默认图片，已添加
+                    const imgPath = `./assets/img/bg/${imgName}`;
+                    // 尝试加载图片，如果存在则添加到背景列表
+                    const img = new Image();
+                    img.onload = function() {
+                        if (!backgrounds.includes(imgPath)) {
+                            backgrounds.push(imgPath);
+                            console.log(`成功添加背景图: ${imgPath}`);
+                        }
+                    };
+                    img.onerror = function() {
+                        console.log(`图片不存在: ${imgPath}`);
+                    };
+                    img.src = imgPath;
+                }
+            });
+        }
+
+        function changeBackground() {
+            const header = document.getElementById('header');
+            header.style.setProperty('background-image', `url('./assets/img/bg/3.jpg')`, 'important');
+        }
+
+        function randomBackground() {
+            const header = document.getElementById('header');
+            const randomIndex = Math.floor(Math.random() * backgrounds.length);
+            header.style.setProperty('background-image', `url('${backgrounds[randomIndex]}')`, 'important');
+        }
+
+        let currentBackgroundIndex = 0;
+        function cycleBackground() {
+            const header = document.getElementById('header');
+            currentBackgroundIndex = (currentBackgroundIndex + 1) % backgrounds.length;
+            header.style.setProperty('background-image', `url('${backgrounds[currentBackgroundIndex]}')`, 'important');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 先设置默认背景图
+            changeBackground();
+            // 扫描并加载所有背景图
+            scanBackgroundImages();
+        });
+
+        // 修改为点击头像时循环切换背景图
+        document.querySelector('.profile img').addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止事件冒泡，防止触发header的点击事件
+            cycleBackground();
+        });
+
+        // 切换页面的函数，添加到全局作用域
+        window.showPage = function(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function showPage(pageId) {
+            window.showPage(pageId);
+        }
+    </script>
+
+    <script type="text/javascript">
+        var memos = {
+            host: 'https://m.brmys.cn:2083/', //修改为本地cflow地址
+            limit: '10',
+            creatorId: '1',
+            domId: '#memos',
+            username: 'brmys', //修改为指定的用户名
+            name: '白日梦与诗', //修改为指定的昵称
+            language: 'zh-CN',
+            APIVersion: 'legacy', //修改为legacy，因为cflow基于Memos 0.18.2
+            total: true,
+            debug: true // 添加调试模式
+        }
+    </script>
+
+    <script>
+        // 添加调试代码
+        window.addEventListener('DOMContentLoaded', function() {
+            // 创建调试区域
+            var debugArea = document.createElement('div');
+            debugArea.id = 'debug-area';
+            debugArea.style.backgroundColor = '#f5f5f5';
+            debugArea.style.padding = '10px';
+            debugArea.style.margin = '20px 0';
+            debugArea.style.borderRadius = '5px';
+            debugArea.style.display = memos.debug ? 'block' : 'none';
+            debugArea.style.whiteSpace = 'pre-wrap';
+            debugArea.style.fontSize = '14px';
+            debugArea.style.fontFamily = 'monospace';
+            
+            var apiInfo = `
+<h3>调试信息</h3>
+<p>API版本: ${memos.APIVersion || '未定义'}</p>
+<p>API地址: ${memos.host || '未定义'}</p>
+<p>用户ID: ${memos.creatorId || '未定义'}</p>
+<p>实际请求地址: ${memos.host ? (memos.host.replace(/\/$/, '') + '/' + (memos.APIVersion === 'legacy' ? 'api/v1/memo' : 'api/v1/memos') + '?creatorId=' + memos.creatorId + '&rowStatus=NORMAL') : '未定义'}</p>
+<div id="debug-content"></div>
+`;
+            
+            debugArea.innerHTML = apiInfo;
+            document.getElementById('memos').parentNode.insertBefore(debugArea, document.getElementById('memos'));
+            
+            // 重写fetch方法，添加日志
+            var originalFetch = window.fetch;
+            window.fetch = function() {
+                var url = arguments[0];
+                var options = arguments[1] || {};
+                
+                if(memos.debug) {
+                    console.log('请求URL:', url);
+                    console.log('请求选项:', options);
+                    document.getElementById('debug-content').innerHTML += `<p style="color:blue;">发送请求: ${url}</p>`;
+                }
+                
+                return originalFetch.apply(this, arguments)
+                    .then(function(response) {
+                        // 克隆响应用于调试
+                        var clonedResponse = response.clone();
+                        
+                        if(memos.debug) {
+                            if (!response.ok) {
+                                document.getElementById('debug-content').innerHTML += `<p style="color:red;">请求失败: ${response.status} ${response.statusText}</p>`;
+                                if (response.status === 404) {
+                                    document.getElementById('debug-content').innerHTML += `<p style="color:orange;">建议: 可能API地址错误或creatorId不存在</p>`;
+                                }
+                            } else {
+                                document.getElementById('debug-content').innerHTML += `<p style="color:green;">请求成功: ${response.status}</p>`;
+                                clonedResponse.json().then(data => {
+                                    console.log('响应数据:', data);
+                                    document.getElementById('debug-content').innerHTML += `<details>
+  <summary>查看响应数据</summary>
+  <pre style="max-height:300px;overflow:auto;">${JSON.stringify(data, null, 2)}</pre>
+</details>`;
+                                }).catch(err => {
+                                    console.error('解析响应失败:', err);
+                                    document.getElementById('debug-content').innerHTML += `<p style="color:red;">解析响应失败: ${err.message}</p>`;
+                                });
+                            }
+                        }
+                        
+                        return response;
+                    })
+                    .catch(function(error) {
+                        if(memos.debug) {
+                            console.error('请求错误:', error);
+                            document.getElementById('debug-content').innerHTML += `<p style="color:darkred;">网络错误: ${error.message}</p>`;
+                        }
+                        throw error;
+                    });
+            };
+        });
+    </script>
+
+    <script type="module">
+        import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+        init({
+            el: '#waline',
+            serverURL: 'https://ment.noisework.cn', //修改为你自己的waline服务端地址
+            meta: ['nick', 'mail', 'link'],
+            requiredMeta: ['mail', 'nick'],
+            pageview: true,
+            search: false,
+            wordLimit: 200,
+            pageSize: 5,
+            avatar: 'monsterid',
+            emoji: [
+                'https://unpkg.com/@waline/emojis@1.2.0/tieba',
+            ],
+            imageUploader: false,
+            copyright: false,
+        });
+    </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type='text/javascript' src='./assets/js/jquery-3.2.1.js'></script>
+    <script type="text/javascript" src="./assets/js/lazyload.min.js"></script>
+    <script type="text/javascript" src="./assets/js/marked.umd.min.js"></script>
+    <script type="text/javascript" src="./assets/js/view-image.min.js"></script>
+    <script type="text/javascript" src="./assets/js/APlayer.min.js"></script>
+    <script type="text/javascript" src="./assets/js/Meting.min.js"></script>
+    <!-- 注释掉不存在的脚本，避免报错 -->
+    <!-- <script type="text/javascript" src="./assets/js/moment.twitter.js"></script> -->
+    <script type="text/javascript" src="./assets/js/highlight.min.js"></script>
+    <script type="text/javascript" src="./assets/js/main.js"></script>
+    <script type="text/javascript" src="./assets/js/custom.js"></script>
+
+    <script>
+        // 添加立即修复Bilibili视频iframe的函数
+        function fixBilibiliIframes() {
+            // 查找所有B站视频iframe
+            var iframes = document.querySelectorAll('iframe[src*="player.bilibili.com"]');
+            console.log('页面加载完成，发现B站视频iframe数量:', iframes.length);
+            
+            iframes.forEach(function(iframe) {
+                // 修复iframe的src
+                var src = iframe.getAttribute('src');
+                
+                // 如果src以//开头，添加https:
+                if (src.startsWith('//')) {
+                    src = 'https:' + src;
+                    iframe.setAttribute('src', src);
+                    console.log('修复视频URL:', src);
+                }
+                
+                // 添加移动端兼容参数
+                if (src.indexOf('as_wide=') === -1) {
+                    src = src + (src.indexOf('?') > -1 ? '&' : '?') + 'as_wide=1&high_quality=1&danmaku=0';
+                    iframe.setAttribute('src', src);
+                    console.log('添加移动端兼容参数:', src);
+                }
+                
+                // 确保iframe有正确的属性
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('scrolling', 'no');
+                iframe.setAttribute('frameborder', '0');
+                
+                // 确保iframe在正确的容器中
+                var parent = iframe.parentElement;
+                if (parent) {
+                    var grandparent = parent.parentElement;
+                    
+                    // 如果已经有正确的结构，只需确保样式正确
+                    if (grandparent && grandparent.classList.contains('bilibili-container')) {
+                        // 确保样式正确
+                        parent.style.position = 'relative';
+                        parent.style.paddingBottom = '56.25%';
+                        parent.style.height = '0';
+                        parent.style.overflow = 'hidden';
+                        parent.style.width = '100%';
+                        parent.style.borderRadius = '4px';
+                        parent.style.boxShadow = '0 2px 10px rgba(0,0,0,0.15)';
+                        
+                        grandparent.style.width = '100%';
+                        grandparent.style.margin = '10px 0';
+                        
+                        iframe.style.position = 'absolute';
+                        iframe.style.top = '0';
+                        iframe.style.left = '0';
+                        iframe.style.width = '100%';
+                        iframe.style.height = '100%';
+                        iframe.style.border = 'none';
+                    }
+                    // 处理旧的视频容器结构
+                    else if (parent.classList.contains('video-wrapper')) {
+                        parent.style.position = 'relative';
+                        parent.style.paddingBottom = '56.25%';
+                        parent.style.height = '0';
+                        parent.style.overflow = 'hidden';
+                        parent.style.width = '100%';
+                        parent.style.margin = '10px 0';
+                        parent.style.borderRadius = '4px';
+                        parent.style.boxShadow = '0 2px 10px rgba(0,0,0,0.15)';
+                        
+                        iframe.style.position = 'absolute';
+                        iframe.style.top = '0';
+                        iframe.style.left = '0';
+                        iframe.style.width = '100%';
+                        iframe.style.height = '100%';
+                        iframe.style.border = 'none';
+                    }
+                    // 如果没有正确容器，创建新容器
+                    else {
+                        // 创建新的结构
+                        var container = document.createElement('div');
+                        container.className = 'bilibili-container';
+                        container.style.width = '100%';
+                        container.style.margin = '10px 0';
+                        
+                        var wrapper = document.createElement('div');
+                        wrapper.style.position = 'relative';
+                        wrapper.style.paddingBottom = '56.25%';
+                        wrapper.style.height = '0';
+                        wrapper.style.overflow = 'hidden';
+                        wrapper.style.width = '100%';
+                        wrapper.style.borderRadius = '4px';
+                        wrapper.style.boxShadow = '0 2px 10px rgba(0,0,0,0.15)';
+                        
+                        iframe.style.position = 'absolute';
+                        iframe.style.top = '0';
+                        iframe.style.left = '0';
+                        iframe.style.width = '100%';
+                        iframe.style.height = '100%';
+                        iframe.style.border = 'none';
+                        
+                        parent.insertBefore(container, iframe);
+                        container.appendChild(wrapper);
+                        wrapper.appendChild(iframe);
+                    }
+                }
+            });
+        }
+        
+        // 添加卡片编号脚本
+        function addCardNumbers() {
+            // 查找所有没有编号的用户信息区域
+            const userInfoDivs = document.querySelectorAll('.memos__userinfo');
+            userInfoDivs.forEach(function(div) {
+                // 检查是否已经添加了编号
+                if (!div.querySelector('.memo-number')) {
+                    // 找到memo的ID
+                    const memoContent = div.closest('.memos__content');
+                    if (memoContent) {
+                        const metaDiv = memoContent.querySelector('.memos__meta');
+                        if (metaDiv) {
+                            const linkElement = metaDiv.querySelector('a[href*="/m/"]');
+                            if (linkElement) {
+                                const href = linkElement.getAttribute('href');
+                                // 从链接中提取ID
+                                const memoId = href.split('/').pop();
+                                if (memoId) {
+                                    // 找到用户ID元素
+                                    const userIdDiv = div.querySelector('.memos__id');
+                                    if (userIdDiv) {
+                                        // 创建编号元素
+                                        const numberLink = document.createElement('a');
+                                        numberLink.className = 'memo-number';
+                                        numberLink.textContent = ` · #${memoId}`;
+                                        numberLink.href = `?id=${memoId}`;
+                                        // 将编号添加到用户ID后
+                                        userIdDiv.appendChild(numberLink);
+                                        console.log(`为memo #${memoId}添加了编号`);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 检查URL参数，如果是单卡片模式，隐藏加载按钮
+            const urlParams = new URLSearchParams(window.location.search);
+            const memoId = urlParams.get('id');
+            if (memoId) {
+                const loadMoreBtns = document.querySelectorAll('.button-load, .load-btn');
+                loadMoreBtns.forEach(button => {
+                    button.style.display = 'none';
+                });
+            }
+        }
+        
+        // 页面加载后立即执行
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(fixBilibiliIframes, 500);
+            setTimeout(addCardNumbers, 500);
+            // 再执行一次，以防有延迟加载的内容
+            setTimeout(fixBilibiliIframes, 2000);
+            setTimeout(addCardNumbers, 2000);
+        });
+        
+        // 监听DOM变化，修复可能后续加载的内容
+        if (window.MutationObserver) {
+            var observer = new MutationObserver(function(mutations) {
+                var hasNewIframe = false;
+                var hasNewMemo = false;
+                
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        for (var i = 0; i < mutation.addedNodes.length; i++) {
+                            var node = mutation.addedNodes[i];
+                            if (node.nodeType === 1) { // Element节点
+                                // 检查是否是iframe或包含iframe
+                                if (node.tagName === 'IFRAME' || node.querySelector('iframe')) {
+                                    hasNewIframe = true;
+                                }
+                                
+                                // 检查是否是新的memo内容
+                                if (node.classList && (
+                                    node.classList.contains('memos__content') || 
+                                    node.querySelector('.memos__content')
+                                )) {
+                                    hasNewMemo = true;
+                                }
+                                
+                                // 检查是否是加载按钮
+                                if (node.classList && (
+                                    node.classList.contains('button-load') || 
+                                    node.classList.contains('load-btn') ||
+                                    node.querySelector('.button-load') ||
+                                    node.querySelector('.load-btn')
+                                )) {
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    const memoId = urlParams.get('id');
+                                    if (memoId) {
+                                        setTimeout(function() {
+                                            const loadMoreBtns = document.querySelectorAll('.button-load, .load-btn');
+                                            loadMoreBtns.forEach(button => {
+                                                button.style.display = 'none';
+                                            });
+                                        }, 50);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                if (hasNewIframe) {
+                    setTimeout(fixBilibiliIframes, 100);
+                }
+                
+                if (hasNewMemo) {
+                    setTimeout(addCardNumbers, 100);
+                }
+            });
+            
+            // 监听body的变化
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+            
+            // 监听加载按钮，确保在单卡片模式下始终隐藏
+            setInterval(function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const memoId = urlParams.get('id');
+                if (memoId) {
+                    const loadMoreBtns = document.querySelectorAll('.button-load, .load-btn');
+                    loadMoreBtns.forEach(button => {
+                        if (button.style.display !== 'none') {
+                            button.style.display = 'none';
+                        }
+                    });
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
