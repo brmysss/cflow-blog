@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="这是来自Noise的个人朋友圈，通过本页你可以浏览我的一些日常碎碎念.">
+    <meta name="keywords" content="noise主页,个人主页,朋友圈,碎碎念">
+    <link rel="icon" href="./assets/img/avatar.png" type="image/png" />
+    <link href="./assets/css/style.css" rel="stylesheet" type="text/css">
+    <link href="./assets/css/APlayer.min.css" rel="stylesheet" type="text/css">
+    <link href="./assets/css/highlight.github.min.css" rel="stylesheet" type="text/css">
+    <link href="./assets/css/custom.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="./assets/css/waline.css" />
+    <link rel="stylesheet" href="./assets/css/friendlink.css">
+    <title>NOISE的碎碎念</title>
+    <style type='text/css'>
+         header {
+            position: relative;
+            height: 200px; /* Adjust height as needed */
+            width: 100%; /* Ensure header takes full width */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 20px;
+            backdrop-filter: blur(16px); /* Add blur effect */
+            transition: background-image 0.5s ease; /* Smooth transition */
+            display: flex;
+            justify-content: flex-start; /* Align items to the left */
+            align-items: center; /* Center content vertically */
+            border-radius: 15px; /* 圆角边框 */
+            
+        }
+
+        .menu {
+            text-align: left; /* Align text to the left */
+            margin-right: auto; /* Push the profile to the right */
+        }
+        .main-title {
+        font-size: 24px; 
+        }
+        .profile {
+            position: absolute;
+            bottom: -30px;
+            right: 2px;
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* 将头像推到右侧 */
+        }
+        .profile-info {
+        margin-right: 8px; /* 文本和头像之间的间距 */
+        }
+        .profile img {
+            width: 60px; /* Adjust size as needed */
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 2px;
+        }
+
+        .profile .title {
+            font-size: 16px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #ff6b6b, #4aa3f7, #6bcb77); /* 渐变颜色 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; /* 使文本填充为透明，以显示渐变 */
+        }
+
+        .profile .description {
+            font-size: 13px;
+            opacity: 1.2;
+            background: linear-gradient(90deg, #766bcb, #ff6b6b, #f7e14a); /* 渐变颜色 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; /* 使文本填充为透明，以显示渐变 */
+        }
+
+        #retopbtn, #rebtmbtn, .theme-toggle {
+            position: fixed;
+            z-index: 98;
+        }
+
+        #rebtmbtn {
+            top: 10px;
+            right: 10px;
+        }
+        
+        #retopbtn {
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .theme-toggle {
+        position: absolute; /* 改为绝对定位 */
+        top: 20px; /* 调整位置 */
+        right: 20px; /* 调整位置 */
+        cursor: pointer;
+        font-size: 20px; /* 增加字体大小以便更易于点击 */
+        z-index: 2; /* 确保在其他元素之上 */
+        }
+
+        .comment-button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            z-index: 9999;
+            max-width: 120%;
+            width: 100%;
+        }
+
+        .comment-box {
+            margin-top: 0px;
+            padding: 0px;
+           
+            border-radius: 5px;
+            z-index: 9999;
+           
+            width: 104%;
+        }
+        .button-container {
+            margin: 16px 0;
+            display: flex;
+            justify-content: flex-start; /* Align buttons to the left */
+        }
+
+        .nav-button {
+            background-color: #3c5b71e0;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .nav-button:hover {
+            background-color: #7b84fe;
+            color: #fff;
+        }
+
+        .nav-button svg {
+            height: 16px;
+            width: 16px;
+            margin-right: 5px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* Mobile specific styles */
+        @media (max-width: 600px) {
+            header {
+                height: 150px; /* Adjust height for mobile */
+            }
+            .theme-toggle {
+            top: 10px; /* 在移动设备上调整位置 */
+            right: 10px; /* 在移动设备上调整位置 */
+            }
+
+            .menu .title {
+                font-size: 20px; /* Adjust title size for mobile */
+            }
+
+            .main-title {
+            font-size: 18px; /* 在手机尺寸下调整字体大小 */
+        }
+            .profile {
+                bottom: -30px; /* Adjust position for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="menu">
+            <div class="title">碎碎念...</div>
+            <div class="pages">
+                <a href="https://memos.noisework.cn" target="_blank" rel="noopener noreferrer"
+                   style="font-size: 14px; background: linear-gradient(90deg, #5fbcff, #7b84fe); 
+                          -webkit-background-clip: text; 
+                          -webkit-text-fill-color: transparent;">前往查看</a>
+            </div>
+        </div>
+
+        <div class="profile">
+            <div class="profile-info">
+                <div class="title">Noise</div>
+                <div class="description">执迷不悟</div>
+            </div>
+            <img src="./assets/img/avatar.png" onclick="changeBackground()" alt="头像">
+        </div>
+
+        <div class='theme-toggle'>🌓</div>
+    </header>
+
+    <section id="main" class="container">
+        <div class="main-title">顾海涛涛，念念不忘</div>
+
+        <blockquote>
+            <p>NOISE <del>碎碎念</del>,忆往昔- <em>都是故事</em></p>
+        </blockquote>
+
+        <div class="total">已记录 <span id="total">0</span>条 🎉</div>
+
+        <blockquote id="tag-filter" class="filter">
+            <div id="tags"></div>
+        </blockquote>
+        
+        <div class="button-container">
+            <button class="nav-button" onclick="showPage('memos')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill='#ffffff' width='64' height='64' viewBox="0 0 56 56">
+                    <path
+                        d="M 16.0938 52.3164 C 17.0313 52.3164 17.6876 51.8476 18.7891 50.8164 L 27.2735 43.0820 L 43.0938 43.1055 C 50.0783 43.1289 53.8280 39.2383 53.8280 32.3711 L 53.8280 14.4180 C 53.8280 7.5508 50.0783 3.6836 43.0938 3.6836 L 12.9064 3.6836 C 5.9454 3.6836 2.1720 7.5273 2.1720 14.4180 L 2.1720 32.3711 C 2.1720 39.2617 5.9454 43.1055 12.9064 43.0820 L 14.0079 43.0820 L 14.0079 49.9024 C 14.0079 51.3555 14.7813 52.3164 16.0938 52.3164 Z M 19.9376 24.3555 C 19.9376 26.2070 18.2969 27.8242 16.4220 27.8242 C 14.5469 27.8242 12.9532 26.2070 12.9532 24.3555 C 12.9532 22.4805 14.5001 20.8398 16.4220 20.8398 C 18.2969 20.8398 19.9376 22.5039 19.9376 24.3555 Z M 31.6564 24.3555 C 31.6564 26.2070 30.0391 27.8242 28.1642 27.8242 C 26.3126 27.8242 24.6954 26.2070 24.6954 24.3555 C 24.6954 22.4805 26.2657 20.8398 28.1642 20.8398 C 30.0391 20.8398 31.6564 22.5039 31.6564 24.3555 Z M 43.3751 24.3555 C 43.3751 26.2070 41.8048 27.8242 39.9064 27.8242 C 38.0313 27.8242 36.4142 26.2070 36.4142 24.3555 C 36.4142 22.4805 38.0079 20.8398 39.9064 20.8398 C 41.8048 20.8398 43.3751 22.5039 43.3751 24.3555 Z">
+                    </path>
+                </svg>
+                说说
+            </button>
+            <button class="nav-button" onclick="showPage('friendlinks')">
+                <svg xmlns="http://www.w3.org/2000/svg" width='64' height='64' fill='#ffffff' viewBox="0 0 16 16">
+                    <path
+                        d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5">
+                    </path>
+                </svg>       
+                友链
+            </button>
+            <button class="nav-button" onclick="showPage('waline')">
+                <svg xmlns="http://www.w3.org/2000/svg" width='64' height='64' fill='#ffffff' viewBox="0 0 16 16">
+                    <path
+                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.5a1 1 0 0 0-.8.4l-1.9 2.533a1 1 0 0 1-1.6 0L5.3 12.4a1 1 0 0 0-.8-.4H2a2 2 0 0 1-2-2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z">
+                    </path>
+                </svg>       
+                留言
+            </button>
+            <button class="nav-button" onclick="showPage('about')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill='#ffffff' width='64' height='64' viewBox="0 0 56 56">
+                    <path
+                        d="M 25.9257 28.5390 L 25.9257 16.1172 L 22.4335 16.1172 C 18.5663 16.1172 16.5272 13.6094 16.5272 11.1719 C 16.5272 8.6406 18.4023 7.1406 20.9101 7.1406 C 23.7929 7.1406 26.0429 9.3672 26.0429 13.0937 L 26.0429 16.1172 L 29.9570 16.1172 L 29.9570 13.0937 C 29.9570 9.3672 32.2070 7.1406 35.0897 7.1406 C 37.5976 7.1406 39.4960 8.6406 39.4960 11.1719 C 39.4960 13.6094 37.3866 16.1172 33.5663 16.1172 L 30.0741 16.1172 L 30.0741 28.5390 L 46.5976 28.5390 C 49.1524 28.5390 50.5352 27.5547 50.5352 25.0468 L 50.5352 19.6094 C 50.5352 17.1250 49.1524 16.1172 46.5976 16.1172 L 41.1366 16.1172 C 42.5897 14.8047 43.4570 13.0234 43.4570 11.0078 C 43.4570 6.4844 39.8710 3.2266 35.3241 3.2266 C 31.9492 3.2266 29.2070 5.1015 28.0116 8.4297 C 26.8163 5.1015 24.0507 3.2266 20.6757 3.2266 C 16.1523 3.2266 12.5429 6.4844 12.5429 11.0078 C 12.5429 13.0234 13.3866 14.8047 14.8632 16.1172 L 9.4023 16.1172 C 6.9882 16.1172 5.4648 17.1250 5.4648 19.6094 L 5.4648 25.0468 C 5.4648 27.5547 6.8710 28.5390 9.4023 28.5390 Z M 25.9257 52.7734 L 25.9257 31.0468 L 8.8163 31.0468 L 8.8163 46.8203 C 8.8163 50.7344 11.1132 52.7734 15.0272 52.7734 Z M 30.0741 31.0468 L 30.0741 52.7734 L 40.9726 52.7734 C 44.8866 52.7734 47.1835 50.7344 47.1835 46.8203 L 47.1835 31.0468 Z">
+                    </path>
+                </svg>       
+                关于
+            </button>
+        </div>
+        
+        <div id="memos" class="memos page active"></div>
+        <div id="friendlinks" class="page"> 
+            <div class="title"><i class="fa-solid fa-user-plus"></i>友情链接</div>
+            </br>
+            <div class="friendlinks-container">
+                <div class="friendlinks-card">
+                    <div class="avatar">
+                        <a href="https://rcy1314.github.io/Idea/">
+                            <img alt="" loading="lazy" decoding="async"
+                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/43w.jpeg">
+                        </a>
+                    </div>
+                    <div class="info">
+                        <a class="friendname" target="_blank" href="https://rcy1314.github.io/Idea/">idea book</a>
+                        <p class="frienddescription">旧的专栏</p>
+                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="https://rcy1314.github.io/Idea/">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/43w.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="https://rcy1314.github.io/Idea/">idea book</a>
+                                        <p class="frienddescription">旧的专栏</p>
+                                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="https://rcy1314.github.io/Idea/">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/43w.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="https://rcy1314.github.io/Idea/">idea book</a>
+                                        <p class="frienddescription">旧的专栏</p>
+                                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="#">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/33s.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="#">待添加</a>
+                                        <p class="frienddescription">未来可期</p>
+                                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="#">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/43e.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="#">待添加</a>
+                                        <p class="frienddescription">未来可期</p>
+                                    </div>
+                                </div>
+                                <div class="friendlinks-card">
+                                    <div class="avatar">
+                                        <a href="#">
+                                            <img alt="" loading="lazy" decoding="async"
+                                                src="https://jsd.cdn.noisework.cn/gh/rcy1314/tuchuang@main/uPic/335r.jpeg">
+                                        </a>
+                                    </div>
+                                    <div class="info">
+                                        <a class="friendname" target="_blank" href="#">待添加</a>
+                                        <p class="frienddescription">未来可期</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+        <div id="waline" class="page">
+            <div id="waline"></div>
+        </div>
+        <div id="about" class="page"> 
+            <div class="title"><i class="fa-solid fa-user-plus"></i>关于</div>
+            </br>  
+            <p>这是一个通过 Memos API 渲染的静态网页</p>  
+            <p>由Noise使用memos发布，使用 <a href="https://memos.noisework.cn" target="_blank" rel="noopener noreferrer"
+                style=" background: linear-gradient(90deg, #ba5fff, #7bc1fe); 
+                       -webkit-background-clip: text; 
+                       -webkit-text-fill-color: transparent;">点击查看</a></p> 
+             <p>致谢：<a href="https://github.com/eallion/memos.top" target="_blank" rel="noopener noreferrer"
+                style=" background: linear-gradient(90deg, #6079f7, #a36bde); 
+                       -webkit-background-clip: text; 
+                       -webkit-text-fill-color: transparent;">项目</a> 
+                     ⎥ 你也可以 <a href="https://www.noisework.cn" target="_blank" rel="noopener noreferrer"
+                style=" background: linear-gradient(90deg, #5fd4ff, #7bc1fe); 
+                       -webkit-background-clip: text; 
+                       -webkit-text-fill-color: transparent;">访问主页</a></p>                      
+    </div>
+    </section>
+    <footer class="markdown-body footer">
+        <div class="bsz">
+           <!--  <span id="busuanzi_container_site_pv">主页总访问量: <span id="busuanzi_value_site_pv"></span> 次</span> -->
+        </div>
+        <div style="margin-top: 10px;">
+            &nbsp; 
+            <span id="momk"></span>
+            <span id="momk_red" style="color: #ff0000;"></span> 
+            <script type="text/javascript">
+                function NewDate(str) {
+                    str = str.split('-');
+                    var date = new Date();
+                    date.setUTCFullYear(str[0], str[1] - 1, str[2]);
+                    date.setUTCHours(0, 0, 0, 0);
+                    return date;
+                }
+    
+                function momxc() {
+                    var birthDay = NewDate("2020-12-09");
+                    var today = new Date();
+                    var timeold = today.getTime() - birthDay.getTime();
+                    var msPerDay = 24 * 60 * 60 * 1000;
+                    var daysold = Math.floor(timeold / msPerDay);
+                    var e_hrsold = (timeold % msPerDay) / (1000 * 60 * 60);
+                    var hrsold = Math.floor(e_hrsold);
+                    var e_minsold = (timeold % (1000 * 60 * 60)) / (1000 * 60);
+                    var minsold = Math.floor(e_minsold);
+                    var seconds = Math.floor((timeold % (1000 * 60)) / 1000);
+    
+                    document.getElementById("momk").innerHTML = "本站已运行: " + daysold + "天" + hrsold + "小时" + minsold + "分" + seconds + "秒";
+                    setTimeout(momxc, 1000);
+                }
+                momxc();
+            </script> 
+        </div>
+        <p>Copyright @
+            <script>
+                document.write(new Date().getFullYear())
+            </script>
+            <a href="https://www.noisework.cn" target="_blank" style="font-size: 14px; background: linear-gradient(90deg, #5fbcff, #7b84fe); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;">NOISE</a> All Rights Reserved.
+        </p>
+    </footer>
+    <!-- 
+    <div id='rebtmbtn' onclick='returnBottom()'>👇</div>
+    <div id='retopbtn' onclick='returnTop()'>👆</div>
+    -->
+    <script type="text/javascript">
+        const backgrounds = [
+            './assets/img/bg/bg11.png',
+            './assets/img/bg/bg2.png',
+            './assets/img/bg/bg3.png',
+            './assets/img/bg/bg4.png',
+            './assets/img/bg/bg7.png',
+            './assets/img/bg/bg9.png',
+            './assets/img/bg/bg10.png',
+            './assets/img/bg/bg12.png',
+            './assets/img/bg/3.png',
+            './assets/img/bg/5ae.gif',
+        ];
+
+        function changeBackground() {
+            const header = document.getElementById('header');
+            const randomIndex = Math.floor(Math.random() * backgrounds.length);
+            header.style.setProperty('background-image', `url('${backgrounds[randomIndex]}')`, 'important');
+        }
+
+        document.addEventListener('DOMContentLoaded', changeBackground);
+
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var memos = {
+            host: 'https://memos.noisework.cn/', //修改为你自己的memos服务地址，结尾要有/
+            limit: '10',
+            creatorId: '1',
+            domId: '#memos',
+            username: 'noise',
+            name: '诺伊斯',
+            language: 'zh-CN',
+            APIVersion: 'new',
+            total: true,
+        }
+    </script>
+
+    <script type="module">
+        import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+        init({
+            el: '#waline',
+            serverURL: 'https://ment.noisework.cn', //修改为你自己的waline服务端地址
+            meta: ['nick', 'mail', 'link'],
+            requiredMeta: ['mail', 'nick'],
+            pageview: true,
+            search: false,
+            wordLimit: 200,
+            pageSize: 5,
+            avatar: 'monsterid',
+            emoji: [
+                'https://unpkg.com/@waline/emojis@1.2.0/tieba',
+            ],
+            imageUploader: false,
+            copyright: false,
+        });
+    </script>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script type='text/javascript' src='./assets/js/jquery-3.2.1.js'></script>
+    <script type="text/javascript" src="./assets/js/lazyload.min.js"></script>
+    <script type="text/javascript" src="./assets/js/marked.umd.min.js"></script>
+    <script type="text/javascript" src="./assets/js/view-image.min.js"></script>
+    <script type="text/javascript" src="./assets/js/APlayer.min.js"></script>
+    <script type="text/javascript" src="./assets/js/Meting.min.js"></script>
+    <script type="text/javascript" src="./assets/js/moment.twitter.js"></script>
+    <script type="text/javascript" src="./assets/js/highlight.min.js"></script>
+    <script type="text/javascript" src="./assets/js/main.js"></script>
+    <script type="text/javascript" src="./assets/js/custom.js"></script>
+</body>
+
+</html>
