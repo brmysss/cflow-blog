@@ -1,0 +1,164 @@
+/* 自定义样式以改进空行显示 */
+.memos__text p {
+    margin-bottom: 1em;
+}
+
+.memos__text p:last-child {
+    margin-bottom: 0;
+}
+
+.memos__text p:first-child {
+    margin-top: 0;
+}
+
+/* Markdown高亮语法样式 */
+.memos__text mark {
+    background-color: #ffee9f;
+    color: #333;
+    padding: 0 3px;
+    border-radius: 3px;
+    box-decoration-break: clone;
+}
+
+/* 暗色模式下的高亮样式 */
+body.dark-theme .memos__text mark {
+    background-color: #665c2a;
+    color: #f8f8f8;
+}
+
+/* Mermaid 图表样式 */
+.mermaid {
+    margin: 1.5em 0;
+    text-align: center;
+    overflow: auto;
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+/* 暗色模式下的 Mermaid 图表样式 */
+body.dark-theme .mermaid {
+    background-color: #2d333b;
+}
+
+/* Mermaid 图表文本颜色 */
+.mermaid text {
+    font-family: 'Source Sans Pro', sans-serif !important;
+    font-size: 14px !important;
+}
+
+/* Mermaid SVG 样式 */
+.mermaid svg {
+    max-width: 100%;
+    height: auto !important;
+}
+
+/* 确保空段落显示 */
+.memos__text p:empty,
+.memos__text p.empty-line {
+    min-height: 1em;
+    display: block;
+    margin: 0.75em 0;
+}
+
+/* 移除卡片首尾的空行 */
+.memos__text p:first-child:empty,
+.memos__text p:first-child.empty-line {
+    display: none;
+    margin: 0;
+}
+
+.memos__text p:last-child:empty,
+.memos__text p:last-child.empty-line {
+    display: none;
+    margin: 0;
+}
+
+/* 对于特定的空格占位符 */
+.memos__text p:has(br + br) {
+    min-height: 2em;
+}
+
+/* 改进段落间间距 */
+.memos__text {
+    line-height: 1.75rem !important;
+    padding: 1rem 0.75rem 1rem 1rem;
+}
+
+/* 在黑暗模式下调整 */
+body.dark-theme .memos__text p:empty,
+body.dark-theme .memos__text p.empty-line {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 0.75em 0;
+}
+
+/* 黑暗模式下同样移除首尾空行 */
+body.dark-theme .memos__text p:first-child:empty,
+body.dark-theme .memos__text p:first-child.empty-line,
+body.dark-theme .memos__text p:last-child:empty,
+body.dark-theme .memos__text p:last-child.empty-line {
+    display: none;
+    margin: 0;
+    border-bottom: none;
+}
+
+/* 标签筛选相关样式 */
+#tag-filter {
+    background-color: var(--color-text-bg);
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.clear-filter {
+    margin-left: 8px;
+    font-size: 12px;
+    color: #718096;
+}
+
+.clear-filter a {
+    color: #718096;
+    text-decoration: none;
+}
+
+.clear-filter a:hover {
+    text-decoration: underline;
+    color: var(--color-tag-hover);
+}
+
+/* 加载状态样式 */
+p.loading {
+    text-align: center;
+    padding: 20px;
+    color: #718096;
+}
+
+p.loading:after {
+    content: "...";
+    animation: loading-dots 1.5s infinite;
+}
+
+@keyframes loading-dots {
+    0% { content: "."; }
+    33% { content: ".."; }
+    66% { content: "..."; }
+}
+
+/* 错误和空数据状态样式 */
+p.error-text, p.empty-data {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+p.error-text {
+    background-color: rgba(254, 226, 226, 0.3);
+    color: #dc2626;
+}
+
+p.empty-data {
+    background-color: var(--color-text-bg);
+    color: #718096;
+}
