@@ -89,8 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (Array.isArray(data)) {
                     for (let i = 0; i < data.length; i++) {
                         if (data[i] && data[i].content) {
-                            // 应用嵌入内容处理
-                            let processedContent = window.processEmbeddedHTML(data[i].content);
+                            // 首先合并连续的引用行
+                            let processedContent = window.mergeConsecutiveQuotes(data[i].content);
+                            // 然后应用嵌入内容处理
+                            processedContent = window.processEmbeddedHTML(processedContent);
                             
                             // 输出处理前后的内容（用于调试）
                             if (data[i].content !== processedContent) {
@@ -175,6 +177,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // 为新添加的memo添加卡片编号
                     addCardNumbers();
+                    
+                    // 为新添加的memo添加评论图标
+                    addCommentIcons();
                 }, 100);
             };
             console.log('成功劫持updateHTMl函数');
@@ -192,7 +197,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (Array.isArray(data)) {
                             for (let i = 0; i < data.length; i++) {
                                 if (data[i] && data[i].content) {
-                                    // 应用嵌入内容处理
+                                    // 首先合并连续的引用行
+                                    data[i].content = window.mergeConsecutiveQuotes(data[i].content);
+                                    // 然后应用嵌入内容处理
                                     data[i].content = window.processEmbeddedHTML(data[i].content);
                                 }
                             }
@@ -270,6 +277,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             
                             // 为新添加的memo添加卡片编号
                             addCardNumbers();
+                            
+                            // 为新添加的memo添加评论图标
+                            addCommentIcons();
                         }, 100);
                     };
                     console.log('成功延迟劫持updateHTMl函数');
@@ -279,9 +289,71 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // 合并连续的引用行，参考Obsidian的行为
+    window.mergeConsecutiveQuotes = function(content) {
+        if (!content) return content;
+        
+        console.log('mergeConsecutiveQuotes 输入:', JSON.stringify(content));
+        
+        // 将内容按行分割
+        const lines = content.split('\n');
+        const processedLines = [];
+        let inQuoteBlock = false;
+        let currentQuoteLines = [];
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const trimmedLine = line.trim();
+            const isQuoteLine = trimmedLine.startsWith('>');
+            const isEmptyLine = trimmedLine === '';
+            
+            if (isQuoteLine) {
+                // 如果是引用行
+                if (!inQuoteBlock) {
+                    // 开始新的引用块
+                    inQuoteBlock = true;
+                    currentQuoteLines = [];
+                }
+                // 移除开头的>符号和空格，添加到当前引用块
+                const quoteContent = line.replace(/^>\s*/, '');
+                currentQuoteLines.push(quoteContent);
+            } else if (isEmptyLine && inQuoteBlock) {
+                // 如果是空行且在引用块内，跳过这个空行（不添加到currentQuoteLines）
+                continue;
+            } else {
+                // 如果不是引用行且不是空行，或者是空行但不在引用块内
+                if (inQuoteBlock) {
+                    // 结束当前引用块，合并所有引用行
+                    if (currentQuoteLines.length > 0) {
+                        // 将多个引用行合并为一个引用块，使用单个>开头
+                        const mergedQuote = '> ' + currentQuoteLines.join('\n');
+                        processedLines.push(mergedQuote);
+                    }
+                    inQuoteBlock = false;
+                    currentQuoteLines = [];
+                }
+                // 添加普通行（包括空行，但空行不在引用块内）
+                processedLines.push(line);
+            }
+        }
+        
+        // 处理文件末尾的引用块
+        if (inQuoteBlock && currentQuoteLines.length > 0) {
+            const mergedQuote = '> ' + currentQuoteLines.join('\n');
+            processedLines.push(mergedQuote);
+        }
+        
+        const result = processedLines.join('\n');
+        console.log('mergeConsecutiveQuotes 输出:', JSON.stringify(result));
+        return result;
+    };
+    
     // 处理嵌入HTML内容
     window.processEmbeddedHTML = function(content) {
         if (!content) return content;
+        
+        // 首先合并连续的引用行
+        content = window.mergeConsecutiveQuotes(content);
         
         // 处理HTML代码块，与cflow使用的格式一致
         const htmlCodeBlockRegex = /```__html\s*\n([\s\S]*?)\n```/g;
@@ -324,8 +396,10 @@ style="position:absolute;width:100%;height:100%;left:0;top:0"></iframe>
         
         // 重写parse函数
         window.marked.parse = function(content, options) {
-            // 首先处理HTML代码块
+            // 首先合并连续的引用行
             if (content && typeof content === 'string') {
+                content = window.mergeConsecutiveQuotes(content);
+                // 然后处理HTML代码块
                 content = window.processEmbeddedHTML(content);
             }
             
@@ -553,6 +627,124 @@ style="position:absolute;width:100%;height:100%;left:0;top:0"></iframe>
     
     // 初始执行一次添加卡片编号
     setTimeout(addCardNumbers, 1000);
+    
+    // 添加评论图标和功能
+    function addCommentIcons() {
+        const memoTexts = document.querySelectorAll('.memos__text');
+        memoTexts.forEach(function(memoText) {
+            // 检查是否已经添加了评论图标
+            if (!memoText.querySelector('.comment-icon')) {
+                // 创建评论图标
+                const commentIcon = document.createElement('div');
+                commentIcon.className = 'comment-icon';
+                commentIcon.innerHTML = '📮';
+                commentIcon.title = '点击评论';
+                
+                // 获取memo ID
+                const memoContent = memoText.closest('.memos__content');
+                let memoId = null;
+                if (memoContent) {
+                    const metaDiv = memoContent.querySelector('.memos__meta');
+                    if (metaDiv) {
+                        const linkElement = metaDiv.querySelector('a[href*="/m/"]');
+                        if (linkElement) {
+                            const href = linkElement.getAttribute('href');
+                            memoId = href.split('/').pop();
+                        }
+                    }
+                }
+                
+                // 添加点击事件
+                commentIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleCommentBox(memoText, memoId);
+                });
+                
+                // 将评论图标添加到memo文本容器中
+                memoText.appendChild(commentIcon);
+            }
+        });
+    }
+    
+    // 切换评论框显示/隐藏
+    function toggleCommentBox(memoText, memoId) {
+        // 查找评论容器，可能在memoText内部或其父级memos__content中
+        let commentContainer = memoText.querySelector('.memo-comment-container');
+        if (!commentContainer) {
+            const memoContent = memoText.closest('.memos__content');
+            if (memoContent) {
+                commentContainer = memoContent.querySelector('.memo-comment-container');
+            }
+        }
+        
+        if (!commentContainer) {
+            // 如果不存在，创建新的评论容器
+            commentContainer = document.createElement('div');
+            commentContainer.className = 'memo-comment-container';
+            commentContainer.innerHTML = '<div class="comment-loading">正在加载评论...</div>';
+            
+            // 添加到memo文本后面
+            const memoContent = memoText.closest('.memos__content');
+            if (memoContent) {
+                memoContent.appendChild(commentContainer);
+            }
+            
+            // 初始化Waline评论
+            initWalineForMemo(commentContainer, memoId);
+            
+            // 显示评论容器
+            commentContainer.classList.add('show');
+            // 滚动到评论区域
+            commentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+            // 如果已存在，切换显示状态
+            if (commentContainer.classList.contains('show')) {
+                commentContainer.classList.remove('show');
+            } else {
+                commentContainer.classList.add('show');
+                // 滚动到评论区域
+                commentContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    }
+    
+    // 为单个memo初始化Waline评论
+    function initWalineForMemo(container, memoId) {
+        // 生成唯一的容器ID
+        const containerId = 'waline-' + memoId + '-' + Date.now();
+        container.innerHTML = `<div id="${containerId}"></div>`;
+        
+        // 使用动态导入方式初始化Waline
+        import('https://unpkg.com/@waline/client@v2/dist/waline.mjs').then(({ init }) => {
+            init({
+                el: '#' + containerId,
+                serverURL: 'https://cm.brmys.top/',
+                meta: ['nick', 'mail', 'link'],
+                requiredMeta: ['mail', 'nick'],
+                pageview: false,
+                search: false,
+                wordLimit: 200,
+                pageSize: 5,
+                avatar: 'monsterid',
+                emoji: [
+                    'https://unpkg.com/@waline/emojis@1.2.0/tieba',
+                ],
+                imageUploader: false,
+                copyright: false,
+                dark: 'html.dark',
+                path: '/memo/' + memoId,
+                apiOptions: {
+                    credentials: 'omit'
+                }
+            });
+        }).catch(error => {
+            console.error('Waline初始化失败:', error);
+            container.innerHTML = '<div class="comment-error">评论系统加载失败，请刷新页面重试</div>';
+        });
+    }
+    
+    // 初始执行一次添加评论图标
+    setTimeout(addCommentIcons, 1000);
     
     // 添加处理marked的钩子，允许HTML标签
     if (window.marked) {
