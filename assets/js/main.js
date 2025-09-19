@@ -167,9 +167,9 @@ var tag = '';
 var nextPageToken = '';
 var btnRemove = 0;
 var memoDom = document.querySelector(memo.domId);
-// 移除加载更多按钮
 var isLoading = false; // 加载状态标志
 var isMemosPage = true; // 默认在碎碎念页面
+var hasMoreData = true; // 是否还有更多数据
 
 // DOM加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
@@ -233,6 +233,14 @@ document.addEventListener('DOMContentLoaded', function() {
 if (memoDom) {
         // 获取第一页数据
         getFirstList();
+        
+        // 添加加载更多按钮事件监听器
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', function() {
+                loadMoreMemos();
+            });
+        }
     }
 });
 
@@ -241,7 +249,11 @@ function getFirstList() {
     page = 1;
     offset = 0;
     btnRemove = 0;
+    hasMoreData = true;
     memoDom.innerHTML = ""; // 清空内容
+    
+    // 隐藏加载更多按钮
+    hideLoadMoreButton();
 
     // 构建API URL
     let apiUrl;
@@ -285,7 +297,11 @@ function getFirstList() {
             
             // 如果返回的数据少于请求的限制，表示已经到底了
             if (data.length < limit) {
-                handleNoMoreData();
+                hasMoreData = false;
+                hideLoadMoreButton();
+            } else {
+                // 显示加载更多按钮
+                showLoadMoreButton();
             }
         })
         .catch(err => {
@@ -791,6 +807,7 @@ function clearTagFilter() {
     // 重置标签和页面状态
     tag = '';
     page = 1;
+    hasMoreData = true;
     
     // 隐藏标签筛选器
     var filterElem = document.getElementById('tag-filter');
@@ -881,13 +898,13 @@ function getTagFirstList(tag) { // 接收标签参数
                 
                 // 如果匹配结果较少，隐藏加载更多按钮
                 if (filteredData.length < 10) {
-                    handleNoMoreData();
+                    hasMoreData = false;
+                    hideLoadMoreButton();
                 } else {
                     // 设置标签，以备后续加载
                     tag = tag;
-                    
-                    // 移除加载按钮状态恢复
-                    
+                    hasMoreData = true;
+                    showLoadMoreButton();
                     page++;
                 }
             })
@@ -1282,4 +1299,100 @@ function preprocessMermaidBlocks(content) {
         // 返回添加了正确语言标记的代码块
         return '```mermaid\n' + code + '```';
     });
+}
+
+// 显示加载更多按钮
+function showLoadMoreButton() {
+    const loadMoreContainer = document.getElementById('load-more-container');
+    if (loadMoreContainer && isMemosPage) {
+        loadMoreContainer.style.display = 'block';
+    }
+}
+
+// 隐藏加载更多按钮
+function hideLoadMoreButton() {
+    const loadMoreContainer = document.getElementById('load-more-container');
+    if (loadMoreContainer) {
+        loadMoreContainer.style.display = 'none';
+    }
+}
+
+// 加载更多说说
+function loadMoreMemos() {
+    if (isLoading || !hasMoreData) {
+        return;
+    }
+    
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+        loadMoreBtn.classList.add('loading');
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = '加载中...';
+    }
+    
+    isLoading = true;
+    page++;
+    
+    // 构建API URL
+    let apiUrl;
+    if (memo.APIVersion === 'legacy') {
+        apiUrl = `${memoUrl}&limit=${limit}&offset=${(page - 1) * limit}`;
+        if (tag) {
+            apiUrl += `&tag=${tag}`;
+        }
+    } else {
+        apiUrl = `${memoUrl}&pageSize=${limit}&pageToken=${nextPageToken}`;
+    }
+    
+    console.log("加载更多请求URL:", apiUrl);
+    
+    fetch(apiUrl)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`网络请求错误: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            console.log("加载更多数据成功，条数:", data.length);
+            
+            // 确保数据是数组
+            if (!Array.isArray(data)) {
+                throw new Error("返回数据不是数组");
+            }
+            
+            // 如果返回数据为空，表示已经到底了
+            if (data.length === 0) {
+                hasMoreData = false;
+                hideLoadMoreButton();
+                return;
+            }
+            
+            // 更新HTML显示（追加到现有内容）
+            updateHTMl(data);
+            
+            // 如果返回的数据少于请求的限制，表示已经到底了
+            if (data.length < limit) {
+                hasMoreData = false;
+                hideLoadMoreButton();
+            }
+        })
+        .catch(err => {
+            console.error("加载更多数据失败:", err);
+            // 恢复按钮状态
+            if (loadMoreBtn) {
+                loadMoreBtn.classList.remove('loading');
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.textContent = '加载更多';
+            }
+        })
+        .finally(() => {
+            isLoading = false;
+            // 恢复按钮状态
+            if (loadMoreBtn) {
+                loadMoreBtn.classList.remove('loading');
+                loadMoreBtn.disabled = false;
+                loadMoreBtn.textContent = '加载更多';
+            }
+        });
 }  
