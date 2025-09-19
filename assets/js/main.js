@@ -529,6 +529,7 @@ function updateHTMl(data) {
             <div class="memos__meta">
                 <small class="memos__date">${timeString}</small>
                 <small>From「<a href="${memo.host}m/${uid}" target="_blank">cflow</a>」</small>
+                <button class="comment-button" data-host="${commenthost}" title="点击评论">📮</button>
             </div>
         </div>
         <div id="comment-box-${commenthost}" class="comment-box" style="display: none;"></div>
@@ -682,6 +683,7 @@ function updateHTMl(data) {
             <div class="memos__meta">
                 <small class="memos__date">${timeString}</small>
                 <small>From「<a href="${memo.host}m/${uid}" target="_blank">cflow</a>」</small>
+                <button class="comment-button" data-host="${commenthost}" title="点击评论">📮</button>
             </div>
         </div>
         <div id="comment-box-${commenthost}" class="comment-box" style="display: none;"></div>
