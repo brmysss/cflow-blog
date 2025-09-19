@@ -1,0 +1,25 @@
+server:
+  port: 1314
+  host: "0.0.0.0"
+  mode: "release" # "release" or "debug"
+
+database:
+  type: "sqlite"
+  path: "/app/data/noise.db"
+
+upload:
+  maxsize: 5242880
+  savepath: "data/images/"
+  allowedtypes: 
+    - "image/jpeg"
+    - "image/png"
+    - "image/gif"
+    - "image/webp"
+    - "image/jpg"
+
+auth:
+  jwt:
+    secret: "HelloNoise!"
+    expires: 2592000 # 30天（单位秒）
+    issuer: "noise"
+    audience: "noise"

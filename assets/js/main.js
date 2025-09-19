@@ -365,7 +365,7 @@ function updateHTMl(data) {
     const TAG_REG = /#([^\s#]+?) /g;
 
     // 解析各种链接（链接标签格式）
-    const BILIBILI_REG = /<a\shref="https:\/\/www\.bilibili\.com\/video\/((av[\d]{1,10})|(BV([\w]{10})))\/?">.*<\/a>/g;
+    const BILIBILI_REG = /<a\shref="https:\/\/www\.bilibili\.com\/video\/((av[\d]{1,10})|(BV([\w]{10})))\/?">https:\/\/www\.bilibili\.com\/video\/((av[\d]{1,10})|(BV[\w]{10}))\/?<\/a>/g;
     const QQMUSIC_REG = /<a\shref="https\:\/\/y\.qq\.com\/.*(\/[0-9a-zA-Z]+)(\.html)?".*?>.*?<\/a>/g;
     const QQVIDEO_REG = /<a\shref="https:\/\/v\.qq\.com\/.*\/([a-zA-Z0-9]+)\.html".*?>.*?<\/a>/g;
     const SPOTIFY_REG = /<a\shref="https:\/\/open\.spotify\.com\/(track|album)\/([\s\S]+)".*?>.*?<\/a>/g;
@@ -374,7 +374,8 @@ function updateHTMl(data) {
     const NETEASE_MUSIC_REG = /<a\shref="https?:\/\/music\.163\.com\/.*?id=(\d+)<\/a>/g;
 
     // 解析纯文本链接（未包装在a标签中的链接）
-    const TEXT_BILIBILI_REG = /https:\/\/www\.bilibili\.com\/video\/((av[\d]{1,10})|(BV[\w]{10}))\/?/g;
+    const TEXT_BILIBILI_REG = /(?<!\]\()https:\/\/www\.bilibili\.com\/video\/((av[\d]{1,10})|(BV[\w]{10}))\/?(?!\))/g;
+    const TEXT_B23_REG = /https:\/\/b23\.tv\/[\w]+/g;
     const TEXT_YOUTUBE_REG = /https?:\/\/(www\.youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
     const TEXT_QQMUSIC_REG = /https:\/\/y\.qq\.com\/.*\/([\w]+)(\.html)?/g;
     const TEXT_QQVIDEO_REG = /https:\/\/v\.qq\.com\/.*\/([a-zA-Z0-9]+)\.html/g;
@@ -443,6 +444,10 @@ function updateHTMl(data) {
                         // 检查捕获的ID是否是BV号
                         const bvid = id.startsWith('BV') ? id : (id.includes('BV') ? id.match(/BV[\w]{10}/)[0] : id);
                         return `<div class="video-wrapper"><iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${bvid}&as_wide=1&high_quality=1&danmaku=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="position:absolute;height:100%;width:100%;" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div>`;
+                    })
+                    .replace(TEXT_B23_REG, function(match) {
+                        // 对于b23.tv短链接，显示一个可点击的链接
+                        return `<div class="b23-link-wrapper"><a href="${match}" target="_blank" class="b23-link">${match}</a><small class="b23-note">(点击查看B站视频)</small></div>`;
                     })
                     .replace(TEXT_YOUTUBE_REG, '<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/$2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div>')
                     .replace(TEXT_NETEASE_MUSIC_REG, function(match) {
@@ -589,6 +594,10 @@ function updateHTMl(data) {
                         // 检查捕获的ID是否是BV号
                         const bvid = id.startsWith('BV') ? id : (id.includes('BV') ? id.match(/BV[\w]{10}/)[0] : id);
                         return `<div class="video-wrapper"><iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?bvid=${bvid}&as_wide=1&high_quality=1&danmaku=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="position:absolute;height:100%;width:100%;" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div>`;
+                    })
+                    .replace(TEXT_B23_REG, function(match) {
+                        // 对于b23.tv短链接，显示一个可点击的链接
+                        return `<div class="b23-link-wrapper"><a href="${match}" target="_blank" class="b23-link">${match}</a><small class="b23-note">(点击查看B站视频)</small></div>`;
                     })
                     .replace(TEXT_YOUTUBE_REG, '<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/$2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts allow-popups"></iframe></div>')
                     .replace(TEXT_NETEASE_MUSIC_REG, function(match) {
@@ -1327,7 +1336,10 @@ function loadMoreMemos() {
     if (loadMoreBtn) {
         loadMoreBtn.classList.add('loading');
         loadMoreBtn.disabled = true;
-        loadMoreBtn.textContent = '加载中...';
+        const btnText = loadMoreBtn.querySelector('.btn-text');
+        if (btnText) {
+            btnText.textContent = '加载中...';
+        }
     }
     
     isLoading = true;
@@ -1383,7 +1395,10 @@ function loadMoreMemos() {
             if (loadMoreBtn) {
                 loadMoreBtn.classList.remove('loading');
                 loadMoreBtn.disabled = false;
-                loadMoreBtn.textContent = '加载更多';
+                const btnText = loadMoreBtn.querySelector('.btn-text');
+                if (btnText) {
+                    btnText.textContent = '加载更多';
+                }
             }
         })
         .finally(() => {
@@ -1392,7 +1407,10 @@ function loadMoreMemos() {
             if (loadMoreBtn) {
                 loadMoreBtn.classList.remove('loading');
                 loadMoreBtn.disabled = false;
-                loadMoreBtn.textContent = '加载更多';
+                const btnText = loadMoreBtn.querySelector('.btn-text');
+                if (btnText) {
+                    btnText.textContent = '加载更多';
+                }
             }
         });
 }  
