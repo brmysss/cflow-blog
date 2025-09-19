@@ -35,6 +35,48 @@ body.dark-theme {
     --color-memos-pre-bg: #2d333b;
 }
 
+/* 暗色主题Mac风格代码块 */
+body.dark-theme .memos__text pre {
+    background: #1e1e1e;
+    border: 1px solid #333333;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .memos__text pre:before {
+    background: linear-gradient(180deg, #2d2d2d 0%, #1a1a1a 100%);
+    border-bottom: 1px solid #404040;
+}
+
+body.dark-theme .memos__text pre code {
+    color: #e6e6e6;
+}
+
+body.dark-theme .memos__text pre .copy-btn {
+    background: rgba(30, 30, 30, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #a0a0a0;
+}
+
+body.dark-theme .memos__text pre .copy-btn:hover {
+    background: rgba(30, 30, 30, 1);
+    color: #ffffff;
+}
+
+body.dark-theme .memos__text pre::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-theme .memos__text pre::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .memos__text pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
 @media (prefers-color-scheme: light) {
     body:not(.dark-theme) {
         /* light theme color */
@@ -260,29 +302,142 @@ blockquote {
     z-index: 1;
 }
 
+/* Mac浏览器风格代码块容器 */
 .memos__text pre {
-    margin-top: 0.25rem;
-    margin-bottom: 0.25rem;
+    position: relative;
+    margin: 1.5rem 0;
     max-width: 100%;
     white-space: pre-wrap;
-    border-radius: 0.25rem;
-    background-color: var(--color-memos-pre-bg);
-    padding: 0.75rem;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e1e5e9;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 3px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    transition: all 0.3s ease;
 }
 
-.memos__text code {
+/* Mac浏览器标题栏 */
+.memos__text pre:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: linear-gradient(180deg, #f7f8fa 0%, #eef0f2 100%);
+    border-bottom: 1px solid #d1d5db;
+    z-index: 2;
+}
+
+/* Mac经典三个点装饰 */
+.memos__text pre:after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff5f57;
+    box-shadow: 
+        20px 0 0 #ffbd2e,
+        40px 0 0 #28ca42;
+    z-index: 3;
+}
+
+/* 代码块内容区域 */
+.memos__text pre code {
+    display: block;
+    padding: 3rem 1.5rem 1.5rem 1.5rem;
+    background: transparent;
+    border: none;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #24292f;
+    overflow-x: auto;
+}
+
+/* 内联代码样式 */
+.memos__text code:not(pre code) {
     display: inline-block;
     border-radius: 0.25rem;
     background-color: var(--color-memos-pre-bg);
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-    font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;
-    font-size: .875rem;
-    line-height: 1.5rem;
+    padding: 0.125rem 0.375rem;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--color-main);
+    border: 1px solid var(--color-border-muted);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.memos__text pre code {
-    display: block;
+/* Mac风格复制按钮 - 默认隐藏 */
+.memos__text pre .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(-2px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 悬停时显示复制按钮 */
+.memos__text pre:hover .copy-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.memos__text pre .copy-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    color: #374151;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.memos__text pre .copy-btn.copied {
+    background: #10b981;
+    color: white;
+    opacity: 1;
+    border-color: #059669;
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+/* Mac风格滚动条 */
+.memos__text pre::-webkit-scrollbar {
+    height: 8px;
+}
+
+.memos__text pre::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.memos__text pre::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.memos__text pre::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .memos__meta {
@@ -593,6 +748,46 @@ blockquote {
 
     .load-btn {
         margin-left: 0;
+    }
+    
+    /* 移动端Mac风格代码块优化 */
+    .memos__text pre {
+        margin: 1rem 0;
+        border-radius: 8px;
+        font-size: 0.8rem;
+    }
+    
+    .memos__text pre:before {
+        height: 28px;
+    }
+    
+    .memos__text pre:after {
+        top: 10px;
+        left: 12px;
+        width: 10px;
+        height: 10px;
+        box-shadow: 
+            16px 0 0 #ffbd2e,
+            32px 0 0 #28ca42;
+    }
+    
+    .memos__text pre code {
+        padding: 2.5rem 1rem 1rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .memos__text code:not(pre code) {
+        font-size: 0.75rem;
+        padding: 0.1rem 0.25rem;
+        border-radius: 3px;
+    }
+    
+    .memos__text pre .copy-btn {
+        top: 6px;
+        right: 12px;
+        padding: 3px 6px;
+        font-size: 10px;
+        border-radius: 4px;
     }
 }
 

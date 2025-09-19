@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码块优化测试</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid var(--color-border-muted);
+            border-radius: 0.5rem;
+        }
+        .test-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--color-main);
+        }
+    </style>
+</head>
+<body>
+    <h1>Mac浏览器风格代码块测试</h1>
+    <p style="color: #6b7280; margin-bottom: 2rem;">经典的Mac浏览器风格设计，具有三个点装饰和悬停显示复制按钮</p>
+    
+    <div style="margin-bottom: 2rem; text-align: center;">
+        <button id="theme-toggle" style="
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        ">切换到暗色主题</button>
+    </div>
+    
+    <div class="test-section">
+        <div class="test-title">JavaScript 代码块</div>
+        <div class="memos__text">
+            <pre><code>javascript
+function addCodeBlockCopyButtons() {
+    const codeBlocks = document.querySelectorAll('.memos__text pre');
+    
+    codeBlocks.forEach((pre, index) => {
+        // 检查是否已经有复制按钮
+        if (pre.querySelector('.copy-btn')) {
+            return;
+        }
+        
+        const code = pre.querySelector('code');
+        if (!code) return;
+        
+        // 创建复制按钮
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = '复制';
+    });
+}</code></pre>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Python 代码块</div>
+        <div class="memos__text">
+            <pre><code>python
+def process_line_breaks(content):
+    """智能处理换行符，避免在代码块中插入&nbsp;"""
+    code_blocks = []
+    protected_content = content.replace(/```[\s\S]*?```/g, function(match):
+        placeholder = f"__CODE_BLOCK_{len(code_blocks)}__"
+        code_blocks.append(match)
+        return placeholder
+    
+    # 在非代码块内容中处理换行
+    protected_content = protected_content.replace(/\n\n/g, "\n\n&nbsp;\n\n")
+    
+    return protected_content</code></pre>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">CSS 代码块</div>
+        <div class="memos__text">
+            <pre><code>css
+.memos__text pre {
+    position: relative;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    max-width: 100%;
+    white-space: pre-wrap;
+    border-radius: 0.5rem;
+    background-color: var(--color-memos-pre-bg);
+    padding: 1rem;
+    border: 1px solid var(--color-border-muted);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}</code></pre>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">JSON 代码块</div>
+        <div class="memos__text">
+            <pre><code>json
+{
+    "name": "代码块优化",
+    "version": "1.0.0",
+    "features": [
+        "复制功能",
+        "语言检测",
+        "响应式设计",
+        "语法高亮"
+    ],
+    "config": {
+        "theme": "auto",
+        "fontSize": "0.875rem"
+    }
+}</code></pre>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">内联代码测试</div>
+        <div class="memos__text">
+            <p>这里有一些内联代码：<code>addCodeBlockCopyButtons()</code> 和 <code>processLineBreaks()</code> 函数。</p>
+            <p>还有更多的内联代码：<code>var(--color-memos-pre-bg)</code> 和 <code>document.querySelectorAll()</code>。</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">长代码块测试（带滚动条）</div>
+        <div class="memos__text">
+            <pre><code>javascript
+// 这是一个很长的代码块，用来测试水平滚动条
+function veryLongFunctionNameThatExceedsNormalWidth() {
+    const veryLongVariableName = "这是一个非常长的字符串，用来测试代码块的滚动功能";
+    const anotherLongVariable = {
+        property1: "value1",
+        property2: "value2",
+        property3: "value3",
+        property4: "value4",
+        property5: "value5"
+    };
+    
+    return veryLongVariableName + anotherLongVariable.property1 + anotherLongVariable.property2;
+}
+
+// 更多长代码
+const longArray = [
+    "item1", "item2", "item3", "item4", "item5",
+    "item6", "item7", "item8", "item9", "item10"
+];
+
+longArray.forEach((item, index) => {
+    console.log(`Processing item ${index + 1}: ${item}`);
+});</code></pre>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // 页面加载完成后初始化代码块功能
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                addCodeBlockCopyButtons();
+                document.querySelectorAll('.memos__text pre').forEach(detectCodeLanguage);
+            }, 100);
+            
+            // 主题切换功能
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                const isDark = document.body.classList.contains('dark-theme');
+                themeToggle.textContent = isDark ? '切换到亮色主题' : '切换到暗色主题';
+            });
+        });
+    </script>
+</body>
+</html>

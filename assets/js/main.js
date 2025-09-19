@@ -1,4 +1,131 @@
 // Memos Start
+
+// 智能处理换行符，避免在代码块中插入&nbsp;
+function processLineBreaks(content) {
+    // 先保护代码块，避免在代码块中进行换行处理
+    const codeBlocks = [];
+    let protectedContent = content.replace(/```[\s\S]*?```/g, function(match) {
+        const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+        codeBlocks.push(match);
+        return placeholder;
+    });
+    
+    // 在非代码块内容中处理换行
+    protectedContent = protectedContent.replace(/\n\n/g, "\n\n&nbsp;\n\n");
+    
+    // 恢复代码块
+    codeBlocks.forEach((block, index) => {
+        protectedContent = protectedContent.replace(`__CODE_BLOCK_${index}__`, block);
+    });
+    
+    return protectedContent;
+}
+
+// 添加代码块复制功能
+function addCodeBlockCopyButtons() {
+    const codeBlocks = document.querySelectorAll('.memos__text pre');
+    
+    codeBlocks.forEach((pre, index) => {
+        // 检查是否已经有复制按钮
+        if (pre.querySelector('.copy-btn')) {
+            return;
+        }
+        
+        const code = pre.querySelector('code');
+        if (!code) return;
+        
+        // 创建复制按钮
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = '复制';
+        copyBtn.setAttribute('aria-label', '复制代码');
+        
+        // 添加复制功能
+        copyBtn.addEventListener('click', async () => {
+            try {
+                const text = code.textContent || code.innerText;
+                await navigator.clipboard.writeText(text);
+                
+                // 更新按钮状态
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = '已复制';
+                copyBtn.classList.add('copied');
+                
+                // 2秒后恢复原状
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                console.error('复制失败:', err);
+                // 降级方案：使用传统的复制方法
+                const textArea = document.createElement('textarea');
+                textArea.value = code.textContent || code.innerText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    copyBtn.textContent = '已复制';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = '复制';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                } catch (fallbackErr) {
+                    console.error('降级复制也失败:', fallbackErr);
+                }
+                document.body.removeChild(textArea);
+            }
+        });
+        
+        pre.appendChild(copyBtn);
+    });
+}
+
+// 检测代码块语言并添加语言标识
+function detectCodeLanguage(pre) {
+    const code = pre.querySelector('code');
+    if (!code) return;
+    
+    const text = code.textContent || code.innerText;
+    const firstLine = text.split('\n')[0].trim();
+    
+    // 检测语言
+    let language = '';
+    if (firstLine.match(/^(javascript|js)$/i)) language = 'JavaScript';
+    else if (firstLine.match(/^(python|py)$/i)) language = 'Python';
+    else if (firstLine.match(/^(html)$/i)) language = 'HTML';
+    else if (firstLine.match(/^(css)$/i)) language = 'CSS';
+    else if (firstLine.match(/^(json)$/i)) language = 'JSON';
+    else if (firstLine.match(/^(xml)$/i)) language = 'XML';
+    else if (firstLine.match(/^(sql)$/i)) language = 'SQL';
+    else if (firstLine.match(/^(bash|sh|shell)$/i)) language = 'Bash';
+    else if (firstLine.match(/^(java)$/i)) language = 'Java';
+    else if (firstLine.match(/^(cpp|c\+\+)$/i)) language = 'C++';
+    else if (firstLine.match(/^(c)$/i)) language = 'C';
+    else if (firstLine.match(/^(php)$/i)) language = 'PHP';
+    else if (firstLine.match(/^(ruby|rb)$/i)) language = 'Ruby';
+    else if (firstLine.match(/^(go)$/i)) language = 'Go';
+    else if (firstLine.match(/^(rust|rs)$/i)) language = 'Rust';
+    else if (firstLine.match(/^(typescript|ts)$/i)) language = 'TypeScript';
+    else if (firstLine.match(/^(markdown|md)$/i)) language = 'Markdown';
+    else if (firstLine.match(/^(yaml|yml)$/i)) language = 'YAML';
+    else if (firstLine.match(/^(dockerfile)$/i)) language = 'Dockerfile';
+    else if (firstLine.match(/^(nginx)$/i)) language = 'Nginx';
+    else if (firstLine.match(/^(apache)$/i)) language = 'Apache';
+    else if (firstLine.match(/^(vim|vimrc)$/i)) language = 'Vim';
+    else if (firstLine.match(/^(diff|patch)$/i)) language = 'Diff';
+    else if (firstLine.match(/^(ini|conf|config)$/i)) language = 'INI';
+    else if (firstLine.match(/^(log)$/i)) language = 'Log';
+    else if (firstLine.match(/^(plain|text|txt)$/i)) language = 'Plain Text';
+    
+    // 更新标题栏显示语言
+    if (language) {
+        pre.style.setProperty('--code-language', `"${language}"`);
+        pre.setAttribute('data-language', language.toLowerCase());
+    }
+}
+
 var memo = {
     host: 'https://demo.usememos.com/',
     limit: '10',
@@ -446,8 +573,8 @@ function updateHTMl(data) {
                 // 处理内容中的标签
                 content = content.replace(TAG_REG, "<span class='tag-span'><a rel='noopener noreferrer' href='#$1'>#$1</a></span>");
                 
-                // 处理连续的换行，确保它们在HTML中得到保留
-                content = content.replace(/\n\n/g, "\n\n&nbsp;\n\n");
+                // 处理连续的换行，确保它们在HTML中得到保留（但不在代码块中）
+                content = processLineBreaks(content);
                 
                 // 特殊处理单行换行，确保它们能够被正确呈现
                 content = content.replace(/([^\n])\n([^\n])/g, "$1\n\n$2");
@@ -591,8 +718,8 @@ function updateHTMl(data) {
                 // 处理内容中的标签
                 content = content.replace(TAG_REG, "<span class='tag-span'><a rel='noopener noreferrer' href='#$1'>#$1</a></span>");
                 
-                // 处理连续的换行，确保它们在HTML中得到保留
-                content = content.replace(/\n\n/g, "\n\n&nbsp;\n\n");
+                // 处理连续的换行，确保它们在HTML中得到保留（但不在代码块中）
+                content = processLineBreaks(content);
                 
                 // 特殊处理单行换行，确保它们能够被正确呈现
                 content = content.replace(/([^\n])\n([^\n])/g, "$1\n\n$2");
@@ -746,6 +873,13 @@ function updateHTMl(data) {
         
         // 处理 Mermaid 图表
         processMermaidCharts();
+        
+        // 优化代码块显示
+        setTimeout(() => {
+            addCodeBlockCopyButtons();
+            // 检测代码块语言
+            document.querySelectorAll('.memos__text pre').forEach(detectCodeLanguage);
+        }, 100);
         
         // 初始化图片查看器
         if (window.ViewImage) {
