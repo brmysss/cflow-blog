@@ -1,0 +1,39 @@
+app = 'ech0-noise'
+primary_region = 'hkg'
+
+[experimental]
+  auto_rollback = true
+
+[build]
+  image = 'noise233/echo-noise'
+  dockerfile = 'Dockerfile'
+
+[env]
+  CGO_ENABLED = '1'
+  DB_HOST = 'example.aws.neon.tech' # 修改为数据库的HOST地址
+  DB_NAME = 'noise'        # 修改为数据库的名称
+  DB_PASSWORD = 'example'  # 修改为数据库的密码
+  DB_PORT = '5432'
+  DB_SSL_MODE = 'require'
+  DB_TYPE = 'postgres'
+  DB_USER = 'noise_owner'  # 修改为数据库的用户名
+  TZ = 'Asia/Shanghai'
+
+[http_service]
+  internal_port = 1314
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 1314
+
+  [[services.ports]]
+    port = 1314
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

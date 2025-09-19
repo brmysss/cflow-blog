@@ -167,7 +167,7 @@ var tag = '';
 var nextPageToken = '';
 var btnRemove = 0;
 var memoDom = document.querySelector(memo.domId);
-var load = '<button class="load-btn button-load">加载更多...</button>';
+// 移除加载更多按钮
 var isLoading = false; // 加载状态标志
 var isMemosPage = true; // 默认在碎碎念页面
 
@@ -231,159 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
 if (memoDom) {
-        // 确保只添加一次按钮
-        if (!document.querySelector('.button-load')) {
-    memoDom.insertAdjacentHTML('afterend', load);
-            console.log("初始化加载更多按钮");
-        }
-        
-        // 直接绑定点击事件，简化处理逻辑
-        document.querySelector('.button-load').addEventListener('click', function loadMoreHandler() {
-            console.log("点击加载更多按钮");
-            const btn = this;
-            
-            // 如果按钮被禁用或标记为移除，忽略点击
-            if (btn.disabled || btnRemove) {
-                console.log("按钮已禁用或已被移除，忽略点击");
-                return;
-            }
-            
-            // 设置按钮为加载状态
-            btn.textContent = '加载中...';
-            btn.disabled = true;
-            
-            // 页码增加，计算新的偏移量
-            page++;
-            offset = limit * (page - 1);
-            console.log(`加载第${page}页数据，偏移量: ${offset}`);
-            
-            // 检查是否在标签筛选模式
-            const isTagMode = tag && tag.length > 0;
-            console.log(`当前模式: ${isTagMode ? '标签筛选 - ' + tag : '普通浏览'}`);
-            
-            // 构建API请求URL
-            var apiUrl;
-            if (isTagMode) {
-                // 标签筛选模式下，需要获取所有内容然后在客户端筛选
-                apiUrl = `${memoUrl}&limit=50&offset=${offset}`;
-            } else if (memo.APIVersion === 'legacy') {
-                apiUrl = `${memoUrl}&limit=${limit}&offset=${offset}`;
-                if (tag) {
-                    apiUrl += `&tag=${tag}`;
-                }
-            } else {
-                // 处理新版API
-                apiUrl = `${memoUrl}&pageSize=${limit}`;
-                if (nextPageToken) {
-                    apiUrl += `&pageToken=${nextPageToken}`;
-                }
-            }
-            
-            console.log("请求URL:", apiUrl);
-            
-            // 发送请求获取数据
-            fetch(apiUrl)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error(`网络请求错误: ${res.status}`);
-                    }
-                    return res.json();
-                })
-                .then(data => {
-                    console.log(`成功获取第${page}页数据，条数:`, data.length);
-                    
-                    // 确保数据是数组
-                    if (!Array.isArray(data)) {
-                        throw new Error("返回数据不是数组");
-                    }
-                    
-                    // 如果返回数据为空，表示没有更多内容
-                    if (data.length === 0) {
-                        handleNoMoreData();
-                        return;
-                    }
-                    
-                    // 如果在标签筛选模式，需要额外处理
-                    if (isTagMode) {
-                        console.log(`标签筛选模式: 筛选标签 "${tag}"`);
-                        // 筛选出包含指定标签的项目
-                        let filteredData = data.filter(item => {
-                            // 从tags字段筛选
-                            if (item.tags && Array.isArray(item.tags)) {
-                                return item.tags.some(t => t === tag);
-                            }
-                            
-                            // 从content中解析
-                            if (item.content) {
-                                // 两种匹配模式
-                                const tagRegex = new RegExp(`#(${tag})[\\s\\n]`, 'i');
-                                const simpleMatch = item.content.includes(`#${tag}`);
-                                return tagRegex.test(item.content) || simpleMatch;
-                            }
-                            
-                            return false;
-                        });
-                        
-                        console.log(`筛选后得到 ${filteredData.length} 条匹配数据`);
-                        
-                        // 如果筛选后没有数据，直接结束
-                        if (filteredData.length === 0) {
-                            handleNoMoreData();
-                            return;
-                        }
-                        
-                        // 使用筛选后的数据更新显示
-                        updateHTMl(filteredData);
-                        
-                        // 如果筛选后的数据很少，可能已经接近尾声
-                        if (filteredData.length < 5) {
-                            handleNoMoreData();
-                        } else {
-                            // 恢复按钮状态
-                            btn.textContent = '加载更多...';
-                            btn.disabled = false;
-                        }
-                    } else {
-                        // 普通模式，直接更新HTML显示
-                        updateHTMl(data);
-                    
-                        // 如果返回的数据少于请求的限制，表示已经到底了
-                        if (data.length < limit) {
-                            handleNoMoreData();
-                        } else {
-                            // 恢复按钮状态
-                            btn.textContent = '加载更多...';
-                            btn.disabled = false;
-                        }
-                    }
-                })
-                .catch(err => {
-                    console.error("加载更多数据失败:", err);
-                    
-                    // 显示错误信息
-                    const errorMsg = document.createElement('p');
-                    errorMsg.className = 'error-message';
-                    errorMsg.textContent = `加载失败: ${err.message}`;
-                    errorMsg.style.color = 'red';
-                    errorMsg.style.textAlign = 'center';
-                    errorMsg.style.margin = '10px 0';
-                    
-                    // 将错误信息插入到按钮之前
-                    btn.parentNode.insertBefore(errorMsg, btn);
-                    
-                    // 3秒后移除错误信息
-                    setTimeout(() => {
-                        if (errorMsg.parentNode) {
-                            errorMsg.parentNode.removeChild(errorMsg);
-                        }
-                    }, 3000);
-                    
-                    // 恢复按钮状态，允许用户重试
-                    btn.textContent = '加载更多...';
-                    btn.disabled = false;
-                });
-        });
-        
         // 获取第一页数据
         getFirstList();
     }
@@ -409,12 +256,7 @@ function getFirstList() {
     
     console.log("首页请求URL:", apiUrl);
     
-    // 禁用加载按钮，直到数据加载完成
-    const btn = document.querySelector('.button-load');
-    if (btn) {
-        btn.textContent = '加载中...';
-        btn.disabled = true;
-    }
+    // 移除加载按钮相关代码
     
     // 发送请求获取数据
     fetch(apiUrl)
@@ -435,7 +277,6 @@ function getFirstList() {
             // 如果返回数据为空
             if (data.length === 0) {
                 memoDom.innerHTML = "<p class='empty-data'>未找到任何数据</p>";
-                if (btn) btn.style.display = 'none';
                 return;
             }
             
@@ -445,20 +286,11 @@ function getFirstList() {
             // 如果返回的数据少于请求的限制，表示已经到底了
             if (data.length < limit) {
                 handleNoMoreData();
-            } else {
-                // 恢复按钮状态
-                if (btn) {
-                    btn.textContent = '加载更多...';
-                    btn.disabled = false;
-                }
             }
         })
         .catch(err => {
             console.error("首页数据加载失败:", err);
             memoDom.innerHTML = `<p class="error-text">获取数据失败: ${err.message}</p>`;
-            
-            // 隐藏加载按钮
-            if (btn) btn.style.display = 'none';
         });
 }
 
@@ -473,12 +305,8 @@ function getNextList() {
 
 // 处理无更多数据的情况
 function handleNoMoreData() {
-    var btn = document.querySelector("button.button-load");
-    if (btn) {
-        btn.textContent = '已加载全部'; // 修改按钮文本
-        btn.disabled = true; // 禁用按钮
-        btnRemove = 1; // 标记按钮已移除
-    }
+    // 移除加载更多按钮相关处理
+    btnRemove = 1; // 标记按钮已移除
 }
 
 // 更新 HTML 内容的函数
@@ -903,93 +731,10 @@ function updateHTMl(data) {
         }
     });
     
-    // 检查加载按钮状态
-    checkLoadButtonStatus();
+    // 移除加载按钮状态检查
 }
 
-// 检查并重置加载按钮状态
-function checkLoadButtonStatus() {
-    var btn = document.querySelector("button.button-load");
-    if (btn) {
-        // 如果按钮处于禁用状态且不是已加载全部，就启用它
-        if (btn.disabled && btn.textContent !== '已加载全部') {
-            btn.disabled = false;
-            btn.textContent = '加载更多...';
-            console.log("强制重置按钮状态为可点击");
-        }
-    } else if (!btnRemove) {
-        // 如果按钮不存在但应该存在，则重新添加
-        memoDom.insertAdjacentHTML('afterend', load);
-        
-        // 重新绑定事件监听
-        const newBtn = document.querySelector("button.button-load");
-        if (newBtn) {
-            newBtn.addEventListener('click', function() {
-                console.log("点击重新添加的加载更多按钮");
-                // 与原按钮事件处理逻辑相同
-                const btn = this;
-                
-                // 如果按钮被禁用或标记为移除，忽略点击
-                if (btn.disabled || btnRemove) {
-                    return;
-                }
-                
-                // 设置按钮为加载状态
-                btn.textContent = '加载中...';
-                btn.disabled = true;
-                
-                // 页码增加，计算新的偏移量
-                page++;
-                offset = limit * (page - 1);
-                
-                // 构建API请求URL
-                var apiUrl;
-                if (memo.APIVersion === 'legacy') {
-                    apiUrl = `${memoUrl}&limit=${limit}&offset=${offset}`;
-                    if (tag) {
-                        apiUrl += `&tag=${tag}`;
-                    }
-                } else {
-                    apiUrl = `${memoUrl}&pageSize=${limit}`;
-                    if (nextPageToken) {
-                        apiUrl += `&pageToken=${nextPageToken}`;
-                    }
-                }
-                
-                // 发送请求获取数据
-                fetch(apiUrl)
-                    .then(res => {
-                        if (!res.ok) throw new Error(`网络请求错误: ${res.status}`);
-                        return res.json();
-                    })
-                    .then(data => {
-                        if (!Array.isArray(data)) throw new Error("返回数据不是数组");
-                        
-                        if (data.length === 0) {
-                            handleNoMoreData();
-                            return;
-                        }
-                        
-                        updateHTMl(data);
-                        
-                        if (data.length < limit) {
-                            handleNoMoreData();
-                        } else {
-                            btn.textContent = '加载更多...';
-                            btn.disabled = false;
-                        }
-                    })
-                    .catch(err => {
-                        console.error("加载失败:", err);
-                        btn.textContent = '加载更多...';
-                        btn.disabled = false;
-                    });
-            });
-        }
-        
-        console.log("重新添加加载更多按钮");
-    }
-}
+// 移除加载按钮状态检查函数
 
 // 标签选择
 document.addEventListener('click', function (event) {
@@ -1033,13 +778,7 @@ document.addEventListener('click', function (event) {
         
         scrollTo(0, 0); // 回到顶部
 
-        // 当前不是碎碎念页面，移除加载更多按钮
-        if (!isMemosPage) {
-            var btn = document.querySelector("button.button-load");
-            if (btn) {
-                btn.remove(); // 移除加载更多按钮
-            }
-        }
+        // 移除加载更多按钮相关处理
     }
 });
 
@@ -1145,12 +884,7 @@ function getTagFirstList(tag) { // 接收标签参数
                     // 设置标签，以备后续加载
                     tag = tag;
                     
-                    // 恢复加载按钮状态
-                    var btn = document.querySelector("button.button-load");
-                    if (btn) {
-                        btn.textContent = '加载更多...';
-                        btn.disabled = false;
-                    }
+                    // 移除加载按钮状态恢复
                     
                     page++;
                 }

@@ -70,11 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // 隐藏"加载更多"按钮
-            const loadMoreBtn = document.querySelector('.button-load');
-            if (loadMoreBtn) {
-                loadMoreBtn.style.display = 'none';
-            }
+            // 移除加载更多按钮处理
             
             return foundMemo;
         };

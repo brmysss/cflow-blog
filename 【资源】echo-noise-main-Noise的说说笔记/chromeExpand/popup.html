@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>说说笔记</title>
+  <link rel="stylesheet" href="css/popup.css">
+  <link rel="stylesheet" href="css/markdown.css">
+  <link rel="stylesheet" href="css/easymde.min.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>
+        <img src="icons/note.svg" alt="笔记" class="title-icon">
+        说说笔记
+      </h1>
+      <button id="settingsBtn" class="settings-btn" title="设置">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M9.954 2.21a9.99 9.99 0 0 1 4.091-.002A3.993 3.993 0 0 0 16 5.07a3.993 3.993 0 0 0 3.457.261A9.99 9.99 0 0 1 21.5 8.876 3.993 3.993 0 0 0 20 12c0 1.264.586 2.391 1.502 3.124a10.043 10.043 0 0 1-2.046 3.543 3.993 3.993 0 0 0-3.456.261 3.993 3.993 0 0 0-1.954 2.86 9.99 9.99 0 0 1-4.091.004A3.993 3.993 0 0 0 8 18.927a3.993 3.993 0 0 0-3.457-.26A9.99 9.99 0 0 1 2.5 15.121 3.993 3.993 0 0 0 4 12c0-1.264-.586-2.391-1.502-3.124a10.043 10.043 0 0 1 2.046-3.543A3.993 3.993 0 0 0 8 5.072a3.993 3.993 0 0 0 1.954-2.86zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" fill="currentColor"/></svg>
+      </button>
+    </header>
+    
+    <div id="editorContainer" class="editor-container">
+      <textarea id="editor"></textarea>
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <button id="tagBtn" class="toolbar-btn" title="添加标签">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M10.9 2.1l9.899 1.415 1.414 9.9-9.192 9.192a1 1 0 0 1-1.414 0l-9.9-9.9a1 1 0 0 1 0-1.414L10.9 2.1zm.707 2.122L3.828 12l8.486 8.485 7.778-7.778-1.06-7.425-7.425-1.06zm2.12 6.364a2 2 0 1 1 2.83-2.829 2 2 0 0 1-2.83 2.829z" fill="currentColor"/></svg>
+          </button>
+          <button id="linkBtn" class="toolbar-btn" title="添加链接">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z" fill="currentColor"/></svg>
+          </button>
+          <button id="imageBtn" class="toolbar-btn" title="添加图片">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4.828 21l-.02.02-.021-.02H2.992A.993.993 0 0 1 2 20.007V3.993A1 1 0 0 1 2.992 3h18.016c.548 0 .992.445.992.993v16.014a1 1 0 0 1-.992.993H4.828zM20 15V5H4v14L14 9l6 6zm0 2.828l-6-6L6.828 19H20v-1.172zM8 11a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="toolbar-right">
+          <button id="sendBtn" class="send-btn">记下</button>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div id="resultContainer" class="result-container hidden">
+      <span id="resultMessage"></span>
+      <div id="previewContent" class="preview-content"></div>
+      <a id="viewLink" class="view-link hidden" href="#" target="_blank">前往查看</a>
+      <button id="closeResultBtn" class="close-btn">&times;</button>
+    </div>
+    
+    <div id="settingsModal" class="modal hidden" style="z-index: 2000;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>设置</h3>
+          <button id="closeSettingsBtn" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="siteUrl">站点地址</label>
+            <input type="text" id="siteUrl" placeholder="例如: https://note.noisework.cn">
+          </div>
+          <div class="form-group">
+            <label for="apiToken">API Token</label>
+            <input type="text" id="apiToken" placeholder="输入你的API Token">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="saveSettingsBtn" class="btn primary-btn">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/easymde.min.js"></script>
+  <script src="js/marked.min.js"></script>
+  <script src="js/popup.js"></script>
+</body>
+</html>

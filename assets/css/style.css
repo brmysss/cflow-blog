@@ -540,18 +540,7 @@ blockquote {
     color: var(--color-tag-hover);
 }
 
-.load-btn {
-    color: var(--color-main);
-    background-color: var(--color-text-bg);
-    margin-left: 50px;
-    border-radius: 8px;
-    padding: 10px;
-    border: none;
-}
-
-.load-btn:hover {
-    background-color: var(--color-text-hover);
-}
+/* 移除加载更多按钮样式 */
 
 .post-preview {
     max-width: 780px;
@@ -720,9 +709,7 @@ blockquote {
         z-index: 2;
     }
 
-    .load-btn {
-        margin-left: 0;
-    }
+    /* 移除移动端加载按钮样式 */
 
     .timeline ul li {
         margin-left: 0;
@@ -746,9 +733,7 @@ blockquote {
         line-height: 19px;
     }
 
-    .load-btn {
-        margin-left: 0;
-    }
+    /* 移除移动端加载按钮样式 */
     
     /* 移动端Mac风格代码块优化 */
     .memos__text pre {

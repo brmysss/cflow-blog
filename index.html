@@ -567,31 +567,7 @@
             text-decoration: underline;
         }
 
-        .load-btn, .button-load {
-            background: var(--color-text-bg);
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.5rem 1.25rem;
-            color: var(--color-main);
-            cursor: pointer;
-            margin: 0 auto;
-            display: block;
-        }
-
-        /* 在留言视图下隐藏加载更多按钮 */
-        #waline .load-btn,
-        #waline .button-load {
-            display: none !important;
-        }
-
-        .load-btn:hover, .button-load:hover {
-            background: var(--color-text-hover);
-        }
-
-        .load-btn:disabled, .button-load:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+        /* 移除加载更多按钮样式 */
 
         /* Mobile specific styles */
         @media (max-width: 600px) {
@@ -687,11 +663,11 @@
     </style>
 </head>
 <body>
-    <header id="header" onclick="window.open('https://www.brmys.top/', '_blank')" style="cursor: pointer;">
+    <header id="header" onclick="window.open('https://blog.brmys.cn', '_blank')" style="cursor: pointer;">
         <div class="menu">
             <div class="title">苏苏碎碎念...</div>
             <div class="pages">
-                <a href="https://www.brmys.top/" target="_blank" rel="noopener noreferrer"
+                <a href="https://blog.brmys.cn/" target="_blank" rel="noopener noreferrer"
                    style="font-size: 14px; background: linear-gradient(90deg, #5fbcff, #7b84fe); 
                           -webkit-background-clip: text; 
                           -webkit-text-fill-color: transparent;">前往博客</a>
@@ -747,7 +723,7 @@
                 </svg>
                 关于
             </button>
-            <button class="nav-button" onclick="window.open('https://www.brmys.top/', '_blank')">
+            <button class="nav-button" onclick="window.open('https://blog.brmys.cn', '_blank')">
                 <svg xmlns="http://www.w3.org/2000/svg" fill='#ffffff' width='64' height='64' viewBox="0 0 56 56">
                     <path d="M28 4C15.3 4 5 14.3 5 27c0 12.7 10.3 23 23 23s23-10.3 23-23C51 14.3 40.7 4 28 4zm4.9 34.4c-.5.3-1.3.2-1.7-.1-.4-.4-.5-1.1-.1-1.7 2.1-3 3.3-6.5 3.3-10.3 0-5.3-2.3-10.3-6.4-13.8-3.3-2.9-7.6-4.5-12.1-4.5-1.5 0-3 .2-4.4.5-.7.1-1.4-.3-1.5-1-.1-.7.3-1.4 1-1.5 1.7-.3 3.5-.5 5.3-.5 5.3 0 10.3 1.9 14.3 5.3 4.8 4.1 7.5 10 7.5 16.1 0 4.5-1.4 8.7-4 12.3-.1.1-.1.2-.2.2zm5.4-5.7c-.2.4-.6.6-1 .6-.2 0-.4 0-.5-.1-1.9-1-4-1.5-6.2-1.5-3.9 0-7.6 1.5-10.3 4.3-.3.3-.7.5-1.1.5-.4 0-.8-.2-1.1-.5-.3-.3-.5-.7-.5-1.1 0-.4.2-.8.5-1.1 3.2-3.2 7.6-5.1 12.1-5.1 2.7 0 5.2.6 7.6 1.9.5.3.7 1 .5 1.6zm3.6-9.1c-.5.4-1.3.3-1.7-.2-2.2-2.7-5.7-4.4-9.4-4.4-3.8 0-7.3 1.7-9.4 4.4-.2.3-.5.4-.9.4-.3 0-.6-.1-.8-.3-.6-.5-.7-1.3-.2-1.9 2.7-3.3 6.9-5.3 11.3-5.3 4.5 0 8.6 2 11.3 5.3.4.5.3 1.4-.2 1.9zm.2-8c-.2.4-.6.7-1.1.7-.2 0-.4 0-.5-.1C35.8 13.7 30.9 12 25.8 12c-5.1 0-10 1.7-14.1 4.8-.5.3-1.2.2-1.7-.1-.5-.4-.7-1.1-.3-1.7C14.2 11.3 19.8 9.3 25.8 9.3c5.9 0 11.6 2 16 5.7.5.3.7 1 .3 1.6z">
                     </path>
@@ -841,11 +817,12 @@
         <div id="about" class="page">
             <div class="title"><i class="fa-solid fa-user-plus"></i>关于</div>
             </br>  
-            <p>cflow创建的公开卡片会发表到这个网页，</p>              <p>cflow由苏苏二次开发完成，在开源项目Memos和cflow基础上开发完成。</p>
-            <p><a href="https://dub.sh/sscflow" target="_blank" rel="noopener noreferrer"
+            <p>本页面为前端页面，后端是基于开源项目memos和cflow二次开发后的个人碎片笔记管理工具。</p>
+            <p>cflow公开卡片会在当前页面进行展示。</p>
+            <p><a href="https://blog.brmys.cn/" target="_blank" rel="noopener noreferrer"
                 style=" background: linear-gradient(90deg, #ba5fff, #7bc1fe); 
                        -webkit-background-clip: text; 
-                       -webkit-text-fill-color: transparent;">cflow详情</a></p>
+                       -webkit-text-fill-color: transparent;">苏苏个人博客：https://blog.brmys.cn/</a></p>
             <p>公众号:白日梦与诗</p>
             <p>微信:x1145158939</p>
             <p>请记得世界和我始终都是爱着你的！</p>                   
@@ -890,7 +867,7 @@
             <script>
                 document.write(new Date().getFullYear())
             </script>
-            <a href="https://www.brmys.top/" target="_blank" style="font-size: 14px; background: linear-gradient(90deg, #5fbcff, #7b84fe); 
+            <a href="https://blog.brmys.cn/" target="_blank" style="font-size: 14px; background: linear-gradient(90deg, #5fbcff, #7b84fe); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent;">白日梦与诗</a> All Rights Reserved.
         </p>
@@ -988,7 +965,7 @@
 
     <script type="text/javascript">
         var memos = {
-            host: 'https://m.brmys.cn:2083/', //修改为本地cflow地址
+            host: 'https://test.brmysss.top/', //修改为本地cflow地址
             limit: '10',
             creatorId: '1',
             domId: '#memos',
@@ -1196,10 +1173,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const memoId = urlParams.get('id');
             if (memoId) {
-                const loadMoreBtns = document.querySelectorAll('.button-load, .load-btn');
-                loadMoreBtns.forEach(button => {
-                    button.style.display = 'none';
-                });
+                // 移除加载更多按钮处理
             }
         }
         
@@ -1236,24 +1210,7 @@
                                     hasNewMemo = true;
                                 }
                                 
-                                // 检查是否是加载按钮
-                                if (node.classList && (
-                                    node.classList.contains('button-load') || 
-                                    node.classList.contains('load-btn') ||
-                                    node.querySelector('.button-load') ||
-                                    node.querySelector('.load-btn')
-                                )) {
-                                    const urlParams = new URLSearchParams(window.location.search);
-                                    const memoId = urlParams.get('id');
-                                    if (memoId) {
-                                        setTimeout(function() {
-                                            const loadMoreBtns = document.querySelectorAll('.button-load, .load-btn');
-                                            loadMoreBtns.forEach(button => {
-                                                button.style.display = 'none';
-                                            });
-                                        }, 50);
-                                    }
-                                }
+                                // 移除加载按钮检查
                             }
                         }
                     }
@@ -1274,19 +1231,7 @@
                 subtree: true
             });
             
-            // 监听加载按钮，确保在单卡片模式下始终隐藏
-            setInterval(function() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const memoId = urlParams.get('id');
-                if (memoId) {
-                    const loadMoreBtns = document.querySelectorAll('.button-load, .load-btn');
-                    loadMoreBtns.forEach(button => {
-                        if (button.style.display !== 'none') {
-                            button.style.display = 'none';
-                        }
-                    });
-                }
-            }, 1000);
+            // 移除加载按钮监听
         }
     </script>
 
